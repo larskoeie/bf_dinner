@@ -1,0 +1,55 @@
+<?php
+
+
+function bf_dinner_menu () {
+	return array(
+
+		'admin/dinner' => array(
+			'title' => 'Fællesspisning',
+			'page callback' => 'bf_dinner_admin_front',
+			'file' => 'bf_dinner.admin.inc',
+			'page arguments' => array('bf_dinner_admin_front'),
+			'access callback' => 'user_access',
+			'access arguments' => array('dinner admin'),
+			'type' => MENU_NORMAL_ITEM,
+
+		),
+
+		'admin/dinner/create' => array(
+			'title' => 'Opret kommende',
+			'page callback' => 'drupal_get_form',
+			'file' => 'bf_dinner.admin.inc',
+			'page arguments' => array('bf_dinner_admin_create'),
+			'access callback' => 'user_access',
+			'access arguments' => array('dinner admin'),
+			'type' => MENU_NORMAL_ITEM,
+			'weight' => 10,
+
+		),
+
+		'admin/dinner/distribute' => array(
+			'title' => 'Fordel',
+			'page callback' => 'drupal_get_form',
+			'file' => 'bf_dinner.admin.inc',
+			'page arguments' => array('bf_dinner_admin_distribute'),
+			'access callback' => 'user_access',
+			'access arguments' => array('dinner admin'),
+			'type' => MENU_NORMAL_ITEM,
+			'weight' => 20,
+
+		),
+
+		'admin/dinner/publish' => array(
+			'title' => 'Offentliggør',
+			'page callback' => 'drupal_get_form',
+			'file' => 'bf_dinner.admin.inc',
+			'page arguments' => array('bf_dinner_admin_publish'),
+			'access callback' => 'user_access',
+			'access arguments' => array('dinner admin'),
+			'type' => MENU_NORMAL_ITEM,
+			'weight' => 30,
+
+		),
+
+	);
+}
