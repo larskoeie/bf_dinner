@@ -73,26 +73,27 @@ define('DINNER_FIELD_USER_KIDS', 'field_dinner_user_kids');
 // date when form was opened last time - can be cleared after XX sec.
 define('DINNER_FIELD_USER_LAST_FORM_OPEN', 'field_dinner_user_form_open');
 
-require_once (DRUPAL_ROOT . '/' . drupal_get_path('module', 'bf_dinner') . '/src/Entity/Date.php');
-require_once (DRUPAL_ROOT . '/' . drupal_get_path('module', 'bf_dinner') . '/src/Entity/Series.php');
-require_once (DRUPAL_ROOT . '/' . drupal_get_path('module', 'bf_dinner') . '/src/Entity/User.php');
+require_once(DRUPAL_ROOT . '/' . drupal_get_path('module', 'bf_dinner') . '/src/Entity/Date.php');
+require_once(DRUPAL_ROOT . '/' . drupal_get_path('module', 'bf_dinner') . '/src/Entity/Series.php');
+require_once(DRUPAL_ROOT . '/' . drupal_get_path('module', 'bf_dinner') . '/src/Entity/User.php');
 
 /**
  * Implements hook_permission.
  *
  * @return array
  */
-function bf_dinner_permission () {
-	return array(
-		'bf dinner admin' => array(
-			'title' => t('Administer dinner assignment system'),
-			'description' => t('Perform administration tasks for dinner assignment system.'),
-		),
-		'bf dinner access to closed' => array(
-			'title' => t('Access to closed dinner forms'),
-			'description' => t('Access to dinner forms, even if closed.'),
-		)
-	);
+function bf_dinner_permission()
+{
+    return array(
+        'bf dinner admin' => array(
+            'title' => t('Administer dinner assignment system'),
+            'description' => t('Perform administration tasks for dinner assignment system.'),
+        ),
+        'bf dinner access to closed' => array(
+            'title' => t('Access to closed dinner forms'),
+            'description' => t('Access to dinner forms, even if closed.'),
+        )
+    );
 }
 
 
@@ -101,44 +102,45 @@ function bf_dinner_permission () {
  *
  * @return array
  */
-function bf_dinner_menu() {
-	return array(
+function bf_dinner_menu()
+{
+    return array(
 
-		/**
-		 * Admin pages and forms
-		 */
-		'admin/dinner' => array(
-			'title' => 'Fællesspisning',
-			'page callback' => 'bf_dinner_admin_front',
-			'file' => 'bf_dinner.admin.inc',
-			'page arguments' => array('bf_dinner_admin_front'),
-			'access callback' => 'user_access',
-			'access arguments' => array('bf dinner admin'),
-			'type' => MENU_NORMAL_ITEM,
+        /**
+         * Admin pages and forms
+         */
+        'admin/dinner' => array(
+            'title' => 'Fællesspisning',
+            'page callback' => 'bf_dinner_admin_front',
+            'file' => 'bf_dinner.admin.inc',
+            'page arguments' => array('bf_dinner_admin_front'),
+            'access callback' => 'user_access',
+            'access arguments' => array('bf dinner admin'),
+            'type' => MENU_NORMAL_ITEM,
 
-		),
+        ),
 
-		'admin/dinner/create' => array(
-			'title' => 'Opret kommende',
-			'page callback' => 'drupal_get_form',
-			'file' => 'bf_dinner.admin.inc',
-			'page arguments' => array('bf_dinner_admin_create'),
-			'access callback' => 'user_access',
-			'access arguments' => array('bf dinner admin'),
-			'type' => MENU_NORMAL_ITEM,
-			'weight' => 10,
+        'admin/dinner/create' => array(
+            'title' => 'Opret kommende',
+            'page callback' => 'drupal_get_form',
+            'file' => 'bf_dinner.admin.inc',
+            'page arguments' => array('bf_dinner_admin_create'),
+            'access callback' => 'user_access',
+            'access arguments' => array('bf dinner admin'),
+            'type' => MENU_NORMAL_ITEM,
+            'weight' => 10,
 
-		),
+        ),
 
-		'admin/dinner/users' => array(
-			'title' => 'Kokke',
+        'admin/dinner/users' => array(
+            'title' => 'Kokke',
             'page callback' => 'bf_dinner_admin_users',
             'file' => 'bf_dinner.admin.inc',
-			'access callback' => 'user_access',
-			'access arguments' => array('bf dinner admin'),
-			'type' => MENU_NORMAL_ITEM,
-			'weight' => 10,
-		),
+            'access callback' => 'user_access',
+            'access arguments' => array('bf dinner admin'),
+            'type' => MENU_NORMAL_ITEM,
+            'weight' => 10,
+        ),
 
         'user/%/dinner' => array(
             'title' => 'Kok',
@@ -162,553 +164,577 @@ function bf_dinner_menu() {
         ),
 
         'admin/dinner/assign' => array(
-			'title' => 'Fordel',
-			'page callback' => 'drupal_get_form',
-			'file' => 'bf_dinner.admin.inc',
-			'page arguments' => array('bf_dinner_admin_assign'),
-			'access callback' => 'user_access',
-			'access arguments' => array('bf dinner admin'),
-			'type' => MENU_NORMAL_ITEM,
-			'weight' => 20,
+            'title' => 'Fordel',
+            'page callback' => 'drupal_get_form',
+            'file' => 'bf_dinner.admin.inc',
+            'page arguments' => array('bf_dinner_admin_assign'),
+            'access callback' => 'user_access',
+            'access arguments' => array('bf dinner admin'),
+            'type' => MENU_NORMAL_ITEM,
+            'weight' => 20,
 
-		),
+        ),
 
-		'admin/dinner/publish' => array(
-			'title' => 'Offentliggør',
-			'page callback' => 'drupal_get_form',
-			'file' => 'bf_dinner.admin.inc',
-			'page arguments' => array('bf_dinner_admin_publish'),
-			'access callback' => 'user_access',
-			'access arguments' => array('bf dinner admin'),
-			'type' => MENU_NORMAL_ITEM,
-			'weight' => 30,
+        'admin/dinner/publish' => array(
+            'title' => 'Offentliggør',
+            'page callback' => 'drupal_get_form',
+            'file' => 'bf_dinner.admin.inc',
+            'page arguments' => array('bf_dinner_admin_publish'),
+            'access callback' => 'user_access',
+            'access arguments' => array('bf dinner admin'),
+            'type' => MENU_NORMAL_ITEM,
+            'weight' => 30,
 
-		),
-		'admin/dinner/settings' => array(
-			'title' => 'Indstillinger',
-			'page callback' => 'drupal_get_form',
-			'file' => 'bf_dinner.admin.inc',
-			'page arguments' => array('bf_dinner_admin_settings_form'),
-			'access callback' => 'user_access',
-			'access arguments' => array('bf dinner admin'),
-			'type' => MENU_NORMAL_ITEM,
-			'weight' => 100,
+        ),
+        'admin/dinner/settings' => array(
+            'title' => 'Indstillinger',
+            'page callback' => 'drupal_get_form',
+            'file' => 'bf_dinner.admin.inc',
+            'page arguments' => array('bf_dinner_admin_settings_form'),
+            'access callback' => 'user_access',
+            'access arguments' => array('bf dinner admin'),
+            'type' => MENU_NORMAL_ITEM,
+            'weight' => 100,
 
-		),
+        ),
 
-		'admin/dinner_assignment_ajax' => array(
-			'title' => 'Assignment ajax',
-			'page callback' => 'bf_dinner_assignment_ajax',
-			'file' => 'bf_dinner.admin.inc',
-			'page_arguments' => array(1, 2, 3),
-			'access callback' => 'user_access',
-			'access arguments' => array('bf dinner admin'),
-			'type' => MENU_CALLBACK,
-		),
+        'admin/dinner_assignment_ajax' => array(
+            'title' => 'Assignment ajax',
+            'page callback' => 'bf_dinner_assignment_ajax',
+            'file' => 'bf_dinner.admin.inc',
+            'page_arguments' => array(1, 2, 3),
+            'access callback' => 'user_access',
+            'access arguments' => array('bf dinner admin'),
+            'type' => MENU_CALLBACK,
+        ),
 
-		/**
-		 * User form.
-		 */
-		'dinner' => array(
-			'title' => 'Kan-liste',
-			'page callback' => 'drupal_get_form',
-			'file' => 'bf_dinner.pages.inc',
-			'page arguments' => array('bf_dinner_user_status_form'),
-			'access callback' => 'user_is_logged_in',
-			'type' => MENU_NORMAL_ITEM,
-			'weight' => 100,
+        /**
+         * User form.
+         */
+        'dinner' => array(
+            'title' => 'Kan-liste',
+            'page callback' => 'drupal_get_form',
+            'file' => 'bf_dinner.pages.inc',
+            'page arguments' => array('bf_dinner_user_status_form'),
+            'access callback' => 'user_is_logged_in',
+            'type' => MENU_NORMAL_ITEM,
+            'weight' => 100,
 
-		),
-		'dinner_conflict_ajax' => array(
-			'title' => 'Conflict ajax',
-			'page callback' => 'bf_dinner_conflict_ajax',
-			'file' => 'bf_dinner.pages.inc',
-			'page_arguments' => array(),
-			'access callback' => 'user_is_logged_in',
-			'type' => MENU_CALLBACK,
-		),
+        ),
+        'dinner_conflict_ajax' => array(
+            'title' => 'Conflict ajax',
+            'page callback' => 'bf_dinner_conflict_ajax',
+            'file' => 'bf_dinner.pages.inc',
+            'page_arguments' => array(),
+            'access callback' => 'user_is_logged_in',
+            'type' => MENU_CALLBACK,
+        ),
 
-	);
+    );
 }
 
-function bf_dinner_page_build () {
-	global $user;
-	if (!user_is_anonymous() && empty($GLOBALS['bf_dinner_is_dinner_page'])) {
-		bf_dinner_utility::setUserFormLastOpenDate($user->uid, FALSE);
-	}
+function bf_dinner_page_build()
+{
+    global $user;
+    if (!user_is_anonymous() && empty($GLOBALS['bf_dinner_is_dinner_page'])) {
+        bf_dinner_utility::setUserFormLastOpenDate($user->uid, FALSE);
+    }
 }
 
 /**
- * 	 * @TODO : something not working here ....
-
+ *     * @TODO : something not working here ....
  */
-function bf_dinner_cron () {
+function bf_dinner_cron()
+{
     return;
 
-	$rows = db_select('bf_dinner_user_date_status', 'mm')
-		->fields('mm')
-		->condition('series', 0, '=')
-		->groupBy('mm.date')
-		->execute()->fetchAll();
+    $rows = db_select('bf_dinner_user_date_status', 'mm')
+        ->fields('mm')
+        ->condition('series', 0, '=')
+        ->groupBy('mm.date')
+        ->execute()->fetchAll();
 
-	foreach ($rows as $row) {
+    foreach ($rows as $row) {
 
-		$series = bf_dinner_utility::getDateSeries($row->date);
-/*		db_update('bf_dinner_user_date_status')
-			->fields(array(
-				'series' => 1,
-			))
-			->condition('date', $row->date, '=')
-			->execute();
-*/
-}
-	die(__FUNCTION__);
+        $series = bf_dinner_utility::getDateSeries($row->date);
+        /*		db_update('bf_dinner_user_date_status')
+                    ->fields(array(
+                        'series' => 1,
+                    ))
+                    ->condition('date', $row->date, '=')
+                    ->execute();
+        */
+    }
+    die(__FUNCTION__);
 }
 
 /**
  * Class bf_dinner_utility
  * Utility class with various static methods.
  */
-class bf_dinner_utility {
+class bf_dinner_utility
+{
 
-	/**
-	 * That's user's name, not username
-	 */
-	public static function getUserName ($uid) {
-		if (is_object($uid)) {
-			$uid = $uid->uid;
-		}
-		$u = user_load($uid);
-
-		if ($temp = field_get_items('user', $u, DINNER_FIELD_USER_NAME)) {
-			return $temp['0']['value'];
-		}
-
-		// return username
-		return $u->name;
-	}
-
-	/**
-	 * @param $date
-	 * @return bool|mixed
-	 */
-	public static function getDateNode ($date) {
-	    if ($date instanceof \DateTime) {
-	        $date = $date->format('Y-m-d');
+    /**
+     * That's user's name, not username
+     */
+    public static function getUserName($uid)
+    {
+        if (is_object($uid)) {
+            $uid = $uid->uid;
         }
-		$nodes = self::getEntityFieldQuery()
-			->fieldCondition(DINNER_FIELD_DATE_DATE, 'value', $date)
-			->execute();
+        $u = user_load($uid);
 
-        if (! sizeof($nodes['node'])) {
+        if ($temp = field_get_items('user', $u, DINNER_FIELD_USER_NAME)) {
+            return $temp['0']['value'];
+        }
+
+        // return username
+        return $u->name;
+    }
+
+    /**
+     * @param $date
+     * @return bool|mixed
+     */
+    public static function getDateNode($date)
+    {
+        if ($date instanceof \DateTime) {
+            $date = $date->format('Y-m-d');
+        }
+        $nodes = self::getEntityFieldQuery()
+            ->fieldCondition(DINNER_FIELD_DATE_DATE, 'value', $date)
+            ->execute();
+
+        if (!sizeof($nodes['node'])) {
             return FALSE;
         }
 
-		list(, $node) = each($nodes['node']);
-		$node = node_load($node->nid);
-		return $node;
-	}
+        list(, $node) = each($nodes['node']);
+        $node = node_load($node->nid);
+        return $node;
+    }
 
-	/**
-	 * @TODO : something not working here ....
-	 *
-	 * @param $date
-	 * @return int
-	 */
-	public static function getDateSeries ($date) {
-		if ($node = self::getDateNode($date)) {
-			if ($temp = field_get_items('node', $node, DINNER_FIELD_DATE_SERIES)) {
-				return $temp['0']['value'];
-			}
-		}
-		return 0;
-	}
+    /**
+     * @TODO : something not working here ....
+     *
+     * @param $date
+     * @return int
+     */
+    public static function getDateSeries($date)
+    {
+        if ($node = self::getDateNode($date)) {
+            if ($temp = field_get_items('node', $node, DINNER_FIELD_DATE_SERIES)) {
+                return $temp['0']['value'];
+            }
+        }
+        return 0;
+    }
 
-	/**
-	 * @param $nid stdClass|int
-	 * @param int $default
-	 * @return int
-	 */
-	public static function getDateState ($nid, $default = DINNER_STATE_SCHEDULED) {
-		if (is_object($nid)) {
-			$nid = $nid->nid;
-		}
-		$nid = node_load($nid);
+    /**
+     * @param $nid stdClass|int
+     * @param int $default
+     * @return int
+     */
+    public static function getDateState($nid, $default = DINNER_STATE_SCHEDULED)
+    {
+        if (is_object($nid)) {
+            $nid = $nid->nid;
+        }
+        $nid = node_load($nid);
 
-		if ($temp = field_get_items('node', $nid, DINNER_FIELD_DATE_STATE)) {
-			return $temp['0']['value'];
-		}
-		return $default;
-	}
+        if ($temp = field_get_items('node', $nid, DINNER_FIELD_DATE_STATE)) {
+            return $temp['0']['value'];
+        }
+        return $default;
+    }
 
-	/**
-	 * @param $nid stdClass|int
-	 * @param int $default
-	 * @return int
-	 */
-	public static function getDateLoad ($nid, $default = DINNER_LOAD_SINGLE) {
-		if (is_object($nid)) {
-			$nid = $nid->nid;
-		}
-		$nid = node_load($nid);
+    /**
+     * @param $nid stdClass|int
+     * @param int $default
+     * @return int
+     */
+    public static function getDateLoad($nid, $default = DINNER_LOAD_SINGLE)
+    {
+        if (is_object($nid)) {
+            $nid = $nid->nid;
+        }
+        $nid = node_load($nid);
 
-		if (self::getDateState($nid, 0) == 0) {
-			return 0;
-		}
+        if (self::getDateState($nid, 0) == 0) {
+            return 0;
+        }
 
-		if ($temp = field_get_items('node', $nid, DINNER_FIELD_DATE_LOAD)) {
-			return $temp['0']['value'];
-		}
-		return $default;
-	}
+        if ($temp = field_get_items('node', $nid, DINNER_FIELD_DATE_LOAD)) {
+            return $temp['0']['value'];
+        }
+        return $default;
+    }
 
-	/**
-	 * @param $user stdClass|int User object or UID
-	 */
-	public static function getUserLoadPrDay($uid, $default = DINNER_LOAD_SINGLE) {
+    /**
+     * @param $user stdClass|int User object or UID
+     */
+    public static function getUserLoadPrDay($uid, $default = DINNER_LOAD_SINGLE)
+    {
 
-		if (is_object($uid)) {
-			$uid = $uid->uid;
-		}
-		$u = user_load($uid);
+        if (is_object($uid)) {
+            $uid = $uid->uid;
+        }
+        $u = user_load($uid);
 
-		if ($temp = field_get_items('user', $u, DINNER_FIELD_USER_LOAD_PRDAY)) {
-			return $temp['0']['value'];
-		}
+        if ($temp = field_get_items('user', $u, DINNER_FIELD_USER_LOAD_PRDAY)) {
+            return $temp['0']['value'];
+        }
 
-		return $default;
-	}
+        return $default;
+    }
 
-	/**
-	 * @param $uid
-	 * @param $load
-	 */
-	public static function setUserLoadPrDay ($uid, $load) {
-		self::setUserFieldValue($uid, DINNER_FIELD_USER_LOAD_PRDAY, $load);
-	}
+    /**
+     * @param $uid
+     * @param $load
+     */
+    public static function setUserLoadPrDay($uid, $load)
+    {
+        self::setUserFieldValue($uid, DINNER_FIELD_USER_LOAD_PRDAY, $load);
+    }
 
-	/**
-	 * Returns first value of field on node. If field is empty, returns false.
-	 *
-	 * @param $uid
-	 * @param $field
-	 */
-	public static function getDateFieldValue ($nid, $field, $default = FALSE) {
-		if (is_object($nid)) {
-			$nid = $nid->nid;
-		}
-		$n = node_load($nid);
+    /**
+     * Returns first value of field on node. If field is empty, returns false.
+     *
+     * @param $uid
+     * @param $field
+     */
+    public static function getDateFieldValue($nid, $field, $default = FALSE)
+    {
+        if (is_object($nid)) {
+            $nid = $nid->nid;
+        }
+        $n = node_load($nid);
 
-		if ($temp = field_get_items('node', $n, $field)) {
-			return $temp['0']['value'];
-		}
+        if ($temp = field_get_items('node', $n, $field)) {
+            return $temp['0']['value'];
+        }
 
-		return $default;
-	}
+        return $default;
+    }
 
-	/**
-	 * Returns first value of field on user account. If field is empty, returns false.
-	 *
-	 * @param $uid
-	 * @param $field
-	 */
-	public static function getUserFieldValue ($uid, $field, $default = FALSE) {
-		if (is_object($uid)) {
-			$uid = $uid->uid;
-		}
-		$u = user_load($uid);
+    /**
+     * Returns first value of field on user account. If field is empty, returns false.
+     *
+     * @param $uid
+     * @param $field
+     */
+    public static function getUserFieldValue($uid, $field, $default = FALSE)
+    {
+        if (is_object($uid)) {
+            $uid = $uid->uid;
+        }
+        $u = user_load($uid);
 
-		if ($temp = field_get_items('user', $u, $field)) {
-			return $temp['0']['value'];
-		}
+        if ($temp = field_get_items('user', $u, $field)) {
+            return $temp['0']['value'];
+        }
 
-		return $default;
+        return $default;
 
-	}
+    }
 
-	/**
-	 *
-	 * @param $uid
-	 * @param string|FALSE $date
-	 */
-	public static function setUserFormLastOpenDate ($uid, $date = 'NOW') {
-		if (empty($uid)) {
-			return;
-		}
-		if (FALSE === $date) {
-			$date = new \DateTime();
-			$date->setTimestamp(0);
-		}
-		if ($date == 'NOW') {
-			$date = new \DateTime();
-			$date->setTimestamp(time());
-		}
-		if (is_string($date)) {
-			$date = new \DateTime($date);
-		}
-		self::setUserFieldValue($uid, DINNER_FIELD_USER_LAST_FORM_OPEN, $date->getTimestamp());
-	}
+    /**
+     *
+     * @param $uid
+     * @param string|FALSE $date
+     */
+    public static function setUserFormLastOpenDate($uid, $date = 'NOW')
+    {
+        if (empty($uid)) {
+            return;
+        }
+        if (FALSE === $date) {
+            $date = new \DateTime();
+            $date->setTimestamp(0);
+        }
+        if ($date == 'NOW') {
+            $date = new \DateTime();
+            $date->setTimestamp(time());
+        }
+        if (is_string($date)) {
+            $date = new \DateTime($date);
+        }
+        self::setUserFieldValue($uid, DINNER_FIELD_USER_LAST_FORM_OPEN, $date->getTimestamp());
+    }
 
-	/**
-	 *
-	 * @param $uid
-	 * @param string $date
-	 */
-	public static function getUserFormLastOpenDate ($uid) {
-		if ($s = self::getUserFieldValue($uid, DINNER_FIELD_USER_LAST_FORM_OPEN)) {
-				$date = new \DateTime($s);
-			$date->setTimestamp($date->getTimestamp() + 7200);
-			return $date;
-		}
-		return FALSE;
-	}
+    /**
+     *
+     * @param $uid
+     * @param string $date
+     */
+    public static function getUserFormLastOpenDate($uid)
+    {
+        if ($s = self::getUserFieldValue($uid, DINNER_FIELD_USER_LAST_FORM_OPEN)) {
+            $date = new \DateTime($s);
+            $date->setTimestamp($date->getTimestamp() + 7200);
+            return $date;
+        }
+        return FALSE;
+    }
 
-	/**
-	 *
-	 */
-	public static function setUserFieldValue ($uid, $field, $value) {
-		if (is_object($uid)) {
-			$uid = $uid->uid;
-		}
-		if (empty($uid)) {
-			return FALSE;
-		}
-		$u = user_load($uid);
-		$user_wrapper = entity_metadata_wrapper('user', $u);
-		$user_wrapper->$field->set($value);
-		$user_wrapper->save();
+    /**
+     *
+     */
+    public static function setUserFieldValue($uid, $field, $value)
+    {
+        if (is_object($uid)) {
+            $uid = $uid->uid;
+        }
+        if (empty($uid)) {
+            return FALSE;
+        }
+        $u = user_load($uid);
+        $user_wrapper = entity_metadata_wrapper('user', $u);
+        $user_wrapper->$field->set($value);
+        $user_wrapper->save();
 
-		return TRUE;
-	}
+        return TRUE;
+    }
 
-	/**
-	 * Retrieve a single status for one user on one date.
-	 *
-	 * @param $uid
-	 * @param $date string|\DateTime
-	 * @return bool|int
-	 */
-	public static function getUserDateStatus($uid, $date, $default = FALSE) {
-		if ($date instanceof \DateTime) {
-			$date = $date->format('Y-m-d');
-		}
-		// fetch status from database
-		$status = db_select('bf_dinner_user_date_status', 'mm')
-			->fields('mm')
-			->condition('uid', $uid, '=')
-			->condition('date', $date, '=')
-			->execute()->fetchAll();
+    /**
+     * Retrieve a single status for one user on one date.
+     *
+     * @param $uid
+     * @param $date string|\DateTime
+     * @return bool|int
+     */
+    public static function getUserDateStatus($uid, $date, $default = FALSE)
+    {
+        if ($date instanceof \DateTime) {
+            $date = $date->format('Y-m-d');
+        }
+        // fetch status from database
+        $status = db_select('bf_dinner_user_date_status', 'mm')
+            ->fields('mm')
+            ->condition('uid', $uid, '=')
+            ->condition('date', $date, '=')
+            ->execute()->fetchAll();
 
         // if there is a row for this combination and the row has a non-null status, return it
-		if (sizeof($status) && ! is_null($status[0]->status)) {
-			return $status[0]->status;
-		}
+        if (sizeof($status) && !is_null($status[0]->status)) {
+            return $status[0]->status;
+        }
 
-		return $default;
-	}
+        return $default;
+    }
 
-	/**
-	 * Get multiple user statuses for one single date.
-	 *
-	 * @param $uid
-	 * @param $date string|\DateTime
-	 * @return array Array of user statuses keyed by uid.
-	 */
-	public static function getUserDateStatuses(array $uids, $date, $default = FALSE) {
-		// set default
-		$o = array();
-		foreach ($uids as $uid) {
-			$o[$uid] = $default;
-		}
-		// sanitize date
-		if ($date instanceof \DateTime) {
-			$date = $date->format('Y-m-d');
-		}
-		// fetch status from database
-		$status = db_select('bf_dinner_user_date_status', 'mm')
-			->fields('mm')
-			->condition('uid', $uids, 'in')
-			->condition('date', $date, '=')
-			->execute()->fetchAll();
+    /**
+     * Get multiple user statuses for one single date.
+     *
+     * @param $uid
+     * @param $date string|\DateTime
+     * @return array Array of user statuses keyed by uid.
+     */
+    public static function getUserDateStatuses(array $uids, $date, $default = FALSE)
+    {
+        // set default
+        $o = array();
+        foreach ($uids as $uid) {
+            $o[$uid] = $default;
+        }
+        // sanitize date
+        if ($date instanceof \DateTime) {
+            $date = $date->format('Y-m-d');
+        }
+        // fetch status from database
+        $status = db_select('bf_dinner_user_date_status', 'mm')
+            ->fields('mm')
+            ->condition('uid', $uids, 'in')
+            ->condition('date', $date, '=')
+            ->execute()->fetchAll();
 
-		if (sizeof($status)) {
-			foreach ($status as $f) {
-				$o[$f->uid] = $f->status;
-			}
-		}
+        if (sizeof($status)) {
+            foreach ($status as $f) {
+                $o[$f->uid] = $f->status;
+            }
+        }
 
-		return $o;
-	}
+        return $o;
+    }
 
-	/**
-	 * Write a single user date status to database.
-	 *
-	 * @param $uid int
-	 * @param $date string
-	 * @param $status int
-	 */
-	public static function setUserDateStatus($uid, $date, $status) {
-		if ($date instanceof \DateTime) {
-			$date = $date->format('Y-m-d');
-		}
+    /**
+     * Write a single user date status to database.
+     *
+     * @param $uid int
+     * @param $date string
+     * @param $status int
+     */
+    public static function setUserDateStatus($uid, $date, $status)
+    {
+        if ($date instanceof \DateTime) {
+            $date = $date->format('Y-m-d');
+        }
 
-		// write status to database
-		db_merge('bf_dinner_user_date_status')
-			->key(array(
-				'uid' => $uid,
-				'date' => $date
-			))
-			->fields(array(
-				'uid' => $uid,
-				'date' => $date,
-				'status' => $status,
-				'changed' => time(),
-			))
-			->execute();
-	}
-
-	/**
-	 * @param $uid int User id
-	 * @param $date string Date
-	 * @param $assigned int As
-	 * @return bool True if success (pt. always true)
-	 */
-	public static function setDateUserAssignment ($uid, $date, $assigned) {
-		if ($date instanceof \DateTime) {
-			$date = $date->format('Y-m-d');
-		}
-
-		// Fetch status first. This is to avoid changing it, if DB default value differs from UI default value.
-		$status = self::getUserDateStatus($uid, $date, DINNER_USER_DATE_STATUS_UNKNOWN);
-
-		db_merge('bf_dinner_user_date_status')
-			->key(array(
-				'uid' => $uid,
-				'date' => $date
-			))
-			->fields(array(
-				'uid' => $uid,
-				'date' => $date,
+        // write status to database
+        db_merge('bf_dinner_user_date_status')
+            ->key(array(
+                'uid' => $uid,
+                'date' => $date
+            ))
+            ->fields(array(
+                'uid' => $uid,
+                'date' => $date,
                 'status' => $status,
-				'assigned' => $assigned ? 1 : 0,
-			))
-			->execute();
+                'changed' => time(),
+            ))
+            ->execute();
+    }
 
-		return TRUE;
-	}
+    /**
+     * @param $uid int User id
+     * @param $date string Date
+     * @param $assigned int As
+     * @return bool True if success (pt. always true)
+     */
+    public static function setDateUserAssignment($uid, $date, $assigned)
+    {
+        if ($date instanceof \DateTime) {
+            $date = $date->format('Y-m-d');
+        }
 
-	/**
-	 *
-	 *
-	 * @param $uid int
-	 * @param $date string
-	 * @param $status int
-	 * @return bool Were all users assigned successfully to this date.
-	 */
-	public static function setDateAssignedUsers($uids, $date) {
-		if ($date instanceof \DateTime) {
-			$date = $date->format('Y-m-d');
-		}
+        // Fetch status first. This is to avoid changing it, if DB default value differs from UI default value.
+        $status = self::getUserDateStatus($uid, $date, DINNER_USER_DATE_STATUS_UNKNOWN);
 
-		// unassign everyone on this date
-		db_update('bf_dinner_user_date_status')
-			->condition('date', $date)
-			->fields(array(
-				'assigned' => 0,
-			))
-			->execute();
+        db_merge('bf_dinner_user_date_status')
+            ->key(array(
+                'uid' => $uid,
+                'date' => $date
+            ))
+            ->fields(array(
+                'uid' => $uid,
+                'date' => $date,
+                'status' => $status,
+                'assigned' => $assigned ? 1 : 0,
+            ))
+            ->execute();
 
-		// assign those in uids
-		foreach ($uids as $uid) {
-			if ($uid) {
-				db_merge('bf_dinner_user_date_status')
-					->key(array(
-						'uid' => $uid,
-						'date' => $date
-					))
-					->fields(array(
-						'uid' => $uid,
-						'date' => $date,
-						'assigned' => 1,
-					))
-					->execute();
-			}
-		}
+        return TRUE;
+    }
 
-		return TRUE;
-	}
+    /**
+     *
+     *
+     * @param $uid int
+     * @param $date string
+     * @param $status int
+     * @return bool Were all users assigned successfully to this date.
+     */
+    public static function setDateAssignedUsers($uids, $date)
+    {
+        if ($date instanceof \DateTime) {
+            $date = $date->format('Y-m-d');
+        }
 
-	/**
-	 *
-	 *
-	 * @param $uid int
-	 * @param $date string
-	 * @param $status int
-	 */
-	public static function getAssignedUsers($date) {
-		if ($date instanceof \DateTime) {
-			$date = $date->format('Y-m-d');
-		}
+        // unassign everyone on this date
+        db_update('bf_dinner_user_date_status')
+            ->condition('date', $date)
+            ->fields(array(
+                'assigned' => 0,
+            ))
+            ->execute();
 
-		$res = db_select('bf_dinner_user_date_status')
-			->fields('bf_dinner_user_date_status')
-			->condition('date', $date)
-			->condition('assigned', 1)
-			->execute();
+        // assign those in uids
+        foreach ($uids as $uid) {
+            if ($uid) {
+                db_merge('bf_dinner_user_date_status')
+                    ->key(array(
+                        'uid' => $uid,
+                        'date' => $date
+                    ))
+                    ->fields(array(
+                        'uid' => $uid,
+                        'date' => $date,
+                        'assigned' => 1,
+                    ))
+                    ->execute();
+            }
+        }
 
-		$out = array();
-		foreach ($res as $us) {
-			$out[] = intval($us->uid);
-		}
+        return TRUE;
+    }
 
-		return $out;
-	}
+    /**
+     *
+     *
+     * @param $uid int
+     * @param $date string
+     * @param $status int
+     */
+    public static function getAssignedUsers($date)
+    {
+        if ($date instanceof \DateTime) {
+            $date = $date->format('Y-m-d');
+        }
 
-	/**
-	 * Get the date of the last published dinner node.
-	 *
-	 * @return \DateTime
-	 */
-	public static function getLastPublishedDate() {
-		$node = self::getLastPublishedNode();
-		list($date) = field_get_items('node', $node, 'field_date');
-		return new DateTime($date['value']);
-	}
+        $res = db_select('bf_dinner_user_date_status')
+            ->fields('bf_dinner_user_date_status')
+            ->condition('date', $date)
+            ->condition('assigned', 1)
+            ->execute();
 
-	/**
-	 * Get the published dinner node that has the last date.
-	 *
-	 * @return bool|mixed
-	 */
-	public static function getLastPublishedNode() {
-		$nodes = self::getEntityFieldQuery()
-			->propertyCondition('status', 1)
-			->fieldOrderBy('field_date', 'value', 'DESC')
-			->range(0, 1)
-			->execute();
-		list(, $node) = each($nodes['node']);
-		$node = node_load($node->nid);
-		return $node;
+        $out = array();
+        foreach ($res as $us) {
+            $out[] = intval($us->uid);
+        }
 
-	}
+        return $out;
+    }
 
-	/**
-	 * Returns all unpublished future nodes.
-	 *
-	 * @return mixed
-	 */
-	public static function getAllUnpublishedNodes() {
-		$nodes = self::getEntityFieldQuery()
-			->propertyCondition('status', 0)
+    /**
+     * Get the date of the last published dinner node.
+     *
+     * @return \DateTime
+     */
+    public static function getLastPublishedDate()
+    {
+        $node = self::getLastPublishedNode();
+        list($date) = field_get_items('node', $node, 'field_date');
+        return new DateTime($date['value']);
+    }
+
+    /**
+     * Get the published dinner node that has the last date.
+     *
+     * @return bool|mixed
+     */
+    public static function getLastPublishedNode()
+    {
+        $nodes = self::getEntityFieldQuery()
+            ->propertyCondition('status', 1)
+            ->fieldOrderBy('field_date', 'value', 'DESC')
+            ->range(0, 1)
+            ->execute();
+        list(, $node) = each($nodes['node']);
+        $node = node_load($node->nid);
+        return $node;
+
+    }
+
+    /**
+     * Returns all unpublished future nodes.
+     *
+     * @return mixed
+     */
+    public static function getAllUnpublishedNodes()
+    {
+        $nodes = self::getEntityFieldQuery()
+            ->propertyCondition('status', 0)
 //			->fieldCondition('field_date', 'value', date('Y-m-d'), '>')
-			->fieldOrderBy('field_date', 'value', 'ASC')
+            ->fieldOrderBy('field_date', 'value', 'ASC')
             ->entityOrderBy('entity_id', 'ASC')
-			->execute();
+            ->execute();
 
-		return self::convertArrayOfNodeObjectsToArrayOfDateObjects($nodes['node']);
-	}
+        return self::convertArrayOfNodeObjectsToArrayOfDateObjects($nodes['node']);
+    }
 
-    public static function getAllUnpublishedNodesWUsers($withoutUsers = FALSE) {
+    public static function getAllUnpublishedNodesWUsers($withoutUsers = FALSE)
+    {
 
         $nodes = self::getEntityFieldQuery()
             ->propertyCondition('status', 0)
@@ -723,12 +749,13 @@ class bf_dinner_utility {
         }
         return $result;
 
-	}
+    }
 
     /**
      * Writes the result to database, for administrator to review.
      */
-    public static function writeTemporaryAssignmentsToPermanent () {
+    public static function writeTemporaryAssignmentsToPermanent()
+    {
         $stat = [];
         $nodes = bf_dinner_utility::getAllNodesInCurrentSeries();
 
@@ -739,18 +766,18 @@ class bf_dinner_utility {
 
             if (sizeof($date->getTempAssignmentUids())) {
 
-	            $temp = [];
-        	    foreach ($date->getTempAssignmentUids() as $uid) {
-                	$temp[] =[
-      	              'target_id' => $uid,
-        	        ];
-            	}	
-            	$date->{DINNER_FIELD_USERS}{LANGUAGE_NONE} = $temp;
-            	$date->status = 1;
+                $temp = [];
+                foreach ($date->getTempAssignmentUids() as $uid) {
+                    $temp[] = [
+                        'target_id' => $uid,
+                    ];
+                }
+                $date->{DINNER_FIELD_USERS}{LANGUAGE_NONE} = $temp;
+                $date->status = 1;
 
-	            node_save($date);
-        	    $stat['saved'] ++;
-		}
+                node_save($date);
+                $stat['saved']++;
+            }
         }
         drupal_set_message(sprintf("Stored %d nodes.", $stat['saved']));
     }
@@ -758,7 +785,8 @@ class bf_dinner_utility {
     /**
      * @return array
      */
-    public static function getNodesForPublishing() {
+    public static function getNodesForPublishing()
+    {
         $out = [];
         /** @var \Drupal\bf_dinner\Entity\Date $date */
         foreach (self::getAllUnpublishedNodes() as $date) {
@@ -768,15 +796,16 @@ class bf_dinner_utility {
         }
 
         return $out;
-	}
+    }
 
-	/**
-	 * Published or unpublished doesn't matter
-	 */
-	public static function getAllNodesInCurrentSeries() {
-	    return self::getAllNodesInSeries(self::getCurrentSeriesId());
+    /**
+     * Published or unpublished doesn't matter
+     */
+    public static function getAllNodesInCurrentSeries()
+    {
+        return self::getAllNodesInSeries(self::getCurrentSeriesId());
 
-	}
+    }
 
     /**
      * @param $date1
@@ -798,7 +827,8 @@ class bf_dinner_utility {
     /**
      * @return \Drupal\bf_dinner\Entity\Date[]
      */
-    public static function getAllFutureNodes () {
+    public static function getAllFutureNodes()
+    {
         $date = new \DateTime();
         $nodes = self::getEntityFieldQuery()
             ->fieldCondition('field_date', 'value', $date->format('Y-m-d'), '>')
@@ -812,34 +842,37 @@ class bf_dinner_utility {
      * @param $series
      * @return \Drupal\bf_dinner\Entity\Date[]
      */
-    public static function getAllNodesInSeries ($series) {
+    public static function getAllNodesInSeries($series)
+    {
         $nodes = self::getEntityFieldQuery()
             ->fieldCondition(DINNER_FIELD_DATE_SERIES, 'value', $series)
             ->fieldOrderBy('field_date', 'value', 'ASC')
             ->execute();
 
         return self::convertArrayOfNodeObjectsToArrayOfDateObjects($nodes['node']);
-	}
-    
+    }
+
 
     /**
      * @param $nodes
      * @return \Drupal\bf_dinner\Entity\Date[]
      */
-    public static function convertArrayOfNodeObjectsToArrayOfDateObjects ($nodes) {
+    public static function convertArrayOfNodeObjectsToArrayOfDateObjects($nodes)
+    {
         $out = [];
         foreach ($nodes as $node) {
             $out[] = self::makeDateObjectFromStdClass($node);
         }
         return $out;
 
-	}
+    }
 
     /**
      * @param stdClass $node
      * @return \Drupal\bf_dinner\Entity\Date
      */
-    public static function makeDateObjectFromStdClass ($node) {
+    public static function makeDateObjectFromStdClass($node)
+    {
         if (is_object($node)) {
             $node = $node->nid;
         }
@@ -851,12 +884,13 @@ class bf_dinner_utility {
         }
 
         return $date;
-	}
+    }
 
     /**
      * @param $user
      */
-    public static function makeUserObjectFromStdClass ($us) {
+    public static function makeUserObjectFromStdClass($us)
+    {
         if (is_object($us)) {
             $us = $us->uid;
         }
@@ -869,21 +903,23 @@ class bf_dinner_utility {
     }
 
 
-	/**
-	 * Return the maximum number in the field DINNER_FIELD_DATE_LIST.
-	 */
-	public static function getCurrentSeriesId () {
-		$nodes = self::getEntityFieldQuery()
-			->fieldOrderBy(DINNER_FIELD_DATE_SERIES, 'value', 'DESC')
-			->execute();
-		$node = array_shift($nodes['node']);
-		return self::getDateFieldValue($node, DINNER_FIELD_DATE_SERIES, 0);
-	}
+    /**
+     * Return the maximum number in the field DINNER_FIELD_DATE_LIST.
+     */
+    public static function getCurrentSeriesId()
+    {
+        $nodes = self::getEntityFieldQuery()
+            ->fieldOrderBy(DINNER_FIELD_DATE_SERIES, 'value', 'DESC')
+            ->execute();
+        $node = array_shift($nodes['node']);
+        return self::getDateFieldValue($node, DINNER_FIELD_DATE_SERIES, 0);
+    }
 
     /**
      * @return array
      */
-    public static function getAllSeriesForSelectOptions() {
+    public static function getAllSeriesForSelectOptions()
+    {
 
 
         $table = 'field_data_' . DINNER_FIELD_DATE_SERIES;
@@ -899,219 +935,232 @@ class bf_dinner_utility {
         }
 
         return $options;
-	}
+    }
 
-	/**
-	 * Returns all unpublished future nodes.
-	 *
-	 * @return mixed
-	 */
-	public static function getFirstUnpublishedNode() {
-		$nodes = self::getAllUnpublishedNodes();
-		return array_shift($nodes);
-	}
+    /**
+     * Returns all unpublished future nodes.
+     *
+     * @return mixed
+     */
+    public static function getFirstUnpublishedNode()
+    {
+        $nodes = self::getAllUnpublishedNodes();
+        return array_shift($nodes);
+    }
 
-	/**
-	 * Extract date from a dinner node.
-	 *
-	 * @param $node \stdClass|int
-	 * @return \DateTime|bool
-	 */
-	public static function getNodeDate ($node) {
-		if (is_object($node)) {
-			$node = $node->nid;
-		}
+    /**
+     * Extract date from a dinner node.
+     *
+     * @param $node \stdClass|int
+     * @return \DateTime|bool
+     */
+    public static function getNodeDate($node)
+    {
+        if (is_object($node)) {
+            $node = $node->nid;
+        }
 
-		$node = node_load($node);
+        $node = node_load($node);
 
-		if ($items = field_get_items('node', $node, 'field_date')) {
-			return new \DateTime($items[0]['value']);
-		}
+        if ($items = field_get_items('node', $node, 'field_date')) {
+            return new \DateTime($items[0]['value']);
+        }
 
-		return FALSE;
-	}
+        return FALSE;
+    }
 
-	/**
-	 * Get an EntiyFieldQuery prepared for retrieving dinner nodes.
-	 *
-	 * @return EntityFieldQuery
-	 */
-	public static function getEntityFieldQuery() {
-		$nodeQuery = new EntityFieldQuery();
-		return $nodeQuery
-			->entityCondition('entity_type', 'node')
-			->entityCondition('bundle', 'dinner')
-			->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT');
-	}
+    /**
+     * Get an EntiyFieldQuery prepared for retrieving dinner nodes.
+     *
+     * @return EntityFieldQuery
+     */
+    public static function getEntityFieldQuery()
+    {
+        $nodeQuery = new EntityFieldQuery();
+        return $nodeQuery
+            ->entityCondition('entity_type', 'node')
+            ->entityCondition('bundle', 'dinner')
+            ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT');
+    }
 
-	/**
-	 * Get a best-guess for the first date in the next dinner series to be created.
-	 *
-	 * @return DateTime
-	 */
-	public static function getNextSeriesFirstDateSuggestion() {
-		return self::getLastPublishedDate()->add(
-			new DateInterval('P1D')
-		);
-	}
+    /**
+     * Get a best-guess for the first date in the next dinner series to be created.
+     *
+     * @return DateTime
+     */
+    public static function getNextSeriesFirstDateSuggestion()
+    {
+        return self::getLastPublishedDate()->add(
+            new DateInterval('P1D')
+        );
+    }
 
-	/**
-	 * Get a best-guess for the last date in the next dinner series to be created.
-	 *
-	 * @return DateTime
-	 */
-	public static function getNextSeriesLastDateSuggestion() {
-		$users = self::getUserCount();
-		// add one day pr. user minus one
-		return self::getNextSeriesFirstDateSuggestion()->add(
-			new DateInterval('P' . ($users - 1) . 'D')
-		);
-	}
+    /**
+     * Get a best-guess for the last date in the next dinner series to be created.
+     *
+     * @return DateTime
+     */
+    public static function getNextSeriesLastDateSuggestion()
+    {
+        $users = self::getUserCount();
+        // add one day pr. user minus one
+        return self::getNextSeriesFirstDateSuggestion()->add(
+            new DateInterval('P' . ($users - 1) . 'D')
+        );
+    }
 
-	/**
-	 * Get number of users involved.
-	 *
-	 * @return int
-	 */
-	public static function getUserCount() {
-		return sizeof(self::getAllUsers());
-	}
+    /**
+     * Get number of users involved.
+     *
+     * @return int
+     */
+    public static function getUserCount()
+    {
+        return sizeof(self::getAllUsers());
+    }
 
-	public static function getUserCountWhoSubmittedCurrentSeries () {
-		$users = array();
+    public static function getUserCountWhoSubmittedCurrentSeries()
+    {
+        $users = array();
 
-		if ($from = self::getNodeDate(self::getFirstUnpublishedNode())) {
-			$from = $from->format('Y-m-d');
-		}
+        if ($from = self::getNodeDate(self::getFirstUnpublishedNode())) {
+            $from = $from->format('Y-m-d');
+        }
 
-		return db_select('bf_dinner_user_date_status', 'mm')
-			->fields('mm')
-			->condition('date', $from, '>=')
-			->execute()->rowCount();
+        return db_select('bf_dinner_user_date_status', 'mm')
+            ->fields('mm')
+            ->condition('date', $from, '>=')
+            ->execute()->rowCount();
 
-	}
+    }
 
-	public static function getUserCountWhoDidNotSubmitCurrentSeries () {
-		return self::getUserCount() - self::getUserCountWhoSubmittedCurrentSeries();
-	}
+    public static function getUserCountWhoDidNotSubmitCurrentSeries()
+    {
+        return self::getUserCount() - self::getUserCountWhoSubmittedCurrentSeries();
+    }
 
-	/**
-	 * Get a suggestion for the next step in dinner assignment process.
-	 * Can be one of : create, edit, open, close, assign, review, publish.
-	 *
-	 * @return string
-	 */
-	public static function getNextStepSuggestion() {
-		$nextStep = &drupal_static(__FUNCTION__);
-		if (empty($nextStep)) {
-			$nextStep = self::_getNextStepSuggestion();
-		}
-		return $nextStep;
-	}
+    /**
+     * Get a suggestion for the next step in dinner assignment process.
+     * Can be one of : create, edit, open, close, assign, review, publish.
+     *
+     * @return string
+     */
+    public static function getNextStepSuggestion()
+    {
+        $nextStep = &drupal_static(__FUNCTION__);
+        if (empty($nextStep)) {
+            $nextStep = self::_getNextStepSuggestion();
+        }
+        return $nextStep;
+    }
 
 
-	/**
-	 * Private helper for above method.
-	 *
-	 * @return string Representing which step is the next one suggested.
-	 */
-	private static function _getNextStepSuggestion() {
-		if (sizeof(self::getAllUnpublishedNodes())) {
-			return 'edit';
-		}
+    /**
+     * Private helper for above method.
+     *
+     * @return string Representing which step is the next one suggested.
+     */
+    private static function _getNextStepSuggestion()
+    {
+        if (sizeof(self::getAllUnpublishedNodes())) {
+            return 'edit';
+        }
 
-		return 'create';
+        return 'create';
 
-	}
+    }
 
-	/**
-	 * Get all involved users. Returned as array of stdClass objects.
-	 *
-	 * @return mixed
-	 */
-	public static function getAllUsers () {
-		$temp = new EntityFieldQuery();
-		$temp = $temp
-			->entityCondition('entity_type', 'user')
-			->fieldCondition(DINNER_FIELD_USER_LOAD_TOTAL, 'value', 0, '>')
-			->fieldOrderBy(DINNER_FIELD_USER_HOUSE, 'tid', 'ASC')
-			->execute();
+    /**
+     * Get all involved users. Returned as array of stdClass objects.
+     *
+     * @return mixed
+     */
+    public static function getAllUsers()
+    {
+        $temp = new EntityFieldQuery();
+        $temp = $temp
+            ->entityCondition('entity_type', 'user')
+            ->fieldCondition(DINNER_FIELD_USER_LOAD_TOTAL, 'value', 0, '>')
+            ->fieldOrderBy(DINNER_FIELD_USER_HOUSE, 'tid', 'ASC')
+            ->execute();
 
         $users = [];
-		foreach (array_keys($temp['user']) as $uid) {
-		    $users[] = self::makeUserObjectFromStdClass($uid);
+        foreach (array_keys($temp['user']) as $uid) {
+            $users[] = self::makeUserObjectFromStdClass($uid);
         }
-		return $users;
-	}
+        return $users;
+    }
 
     /**
      * @param $u
      * @return array
      */
-	public static function getOtherUsersInHouse ($u) {
+    public static function getOtherUsersInHouse($u)
+    {
 
-		if (!is_object($u)) {
-			$u = user_load($u);
-		}
-		$uid = $u->uid;
+        if (!is_object($u)) {
+            $u = user_load($u);
+        }
+        $uid = $u->uid;
 
-		if ($temp = field_get_items('user', $u, DINNER_FIELD_USER_HOUSE)) {
-			$house = intval($temp[0]['tid']);
-			// get all users attached to house, except the logged in user, which is already added to arrays
-			$q = new EntityFieldQuery();
-			$temp = $q
-				->entityCondition('entity_type', 'user')
-				->entityCondition('bundle', 'user')
-				->propertyCondition('uid', $uid, '<>')
-				->fieldCondition(DINNER_FIELD_USER_HOUSE, 'tid', $house)
-				->execute();
+        if ($temp = field_get_items('user', $u, DINNER_FIELD_USER_HOUSE)) {
+            $house = intval($temp[0]['tid']);
+            // get all users attached to house, except the logged in user, which is already added to arrays
+            $q = new EntityFieldQuery();
+            $temp = $q
+                ->entityCondition('entity_type', 'user')
+                ->entityCondition('bundle', 'user')
+                ->propertyCondition('uid', $uid, '<>')
+                ->fieldCondition(DINNER_FIELD_USER_HOUSE, 'tid', $house)
+                ->execute();
 
-			return $temp['user'];
-		}
+            return $temp['user'];
+        }
 
-		return array();
-	}
+        return array();
+    }
 
-	/**
-	 * @param $uid
-	 */
-	public static function getConflictRiscArray ($uid) {
-		define('THRESHOLD', 10);
+    /**
+     * @param $uid
+     */
+    public static function getConflictRiscArray($uid)
+    {
+        define('THRESHOLD', 10);
 
-		$minAge = 100000;
+        $minAge = 100000;
 
-		foreach (self::getOtherUsersInHouse($uid) as $u => $dummy) {
-			if ($lastOpenDate = bf_dinner_utility::getUserFormLastOpenDate($u)) {
-				$now = new \DateTime();
-				$now->setTimestamp(time());
+        foreach (self::getOtherUsersInHouse($uid) as $u => $dummy) {
+            if ($lastOpenDate = bf_dinner_utility::getUserFormLastOpenDate($u)) {
+                $now = new \DateTime();
+                $now->setTimestamp(time());
 //				var_dump($now); var_dump($lastOpenDate);
-				$age = $now->getTimestamp() - $lastOpenDate->getTimestamp();
-				if ($age < THRESHOLD) {
-					$account = user_load($u);
+                $age = $now->getTimestamp() - $lastOpenDate->getTimestamp();
+                if ($age < THRESHOLD) {
+                    $account = user_load($u);
 
-					return array(
-						'risc' => TRUE,
-						'messagePage' => self::getUserName($u) . ' har også sin kan-liste åben. For at undgå at I overskriver hinandens K´er, har I begge kun adgang til jeres egen kan-liste, og ikke til hele husstandens.',
-						'messageAjax' => self::getUserName($u) . ' har lige åbnet sin kan-liste. For at undgå at I overskriver hinandens K´er, har I begge kun adgang til jeres egen kan-liste, og ikke til hele husstandens.',
-						'type' => 'warning',
-						'otherUserName' => self::getUserName($u),
-						'imageTag' => theme('image_style', array('style_name' => 'small_thumb', 'path' => $account->picture->uri))
+                    return array(
+                        'risc' => TRUE,
+                        'messagePage' => self::getUserName($u) . ' har også sin kan-liste åben. For at undgå at I overskriver hinandens K´er, har I begge kun adgang til jeres egen kan-liste, og ikke til hele husstandens.',
+                        'messageAjax' => self::getUserName($u) . ' har lige åbnet sin kan-liste. For at undgå at I overskriver hinandens K´er, har I begge kun adgang til jeres egen kan-liste, og ikke til hele husstandens.',
+                        'type' => 'warning',
+                        'otherUserName' => self::getUserName($u),
+                        'imageTag' => theme('image_style', array('style_name' => 'small_thumb', 'path' => $account->picture->uri))
 
-					//  Hvis du vil have adgang til hele husstanden igen, skal du bede ' . self::getUserName($u) . ' lukke kan-listen, dvs. f.eks. gå til forsiden af Blikintra.
-					);
-				}
-				$minAge = min($minAge, $age);
-			}
-		}
-		return array(
-			'risc' => FALSE,
-			'messageAjax' => $_GET['otherUserName'] . ' har lukket kan-listen. Du kan få adgang til alle husstandens kan-lister igen ved at gemme denne liste og åbne den igen.',
-			'messagePage' => '',
-			'type' => 'status',
-			'minAge' => $minAge,
+                        //  Hvis du vil have adgang til hele husstanden igen, skal du bede ' . self::getUserName($u) . ' lukke kan-listen, dvs. f.eks. gå til forsiden af Blikintra.
+                    );
+                }
+                $minAge = min($minAge, $age);
+            }
+        }
+        return array(
+            'risc' => FALSE,
+            'messageAjax' => $_GET['otherUserName'] . ' har lukket kan-listen. Du kan få adgang til alle husstandens kan-lister igen ved at gemme denne liste og åbne den igen.',
+            'messagePage' => '',
+            'type' => 'status',
+            'minAge' => $minAge,
 
-		);
-	}
+        );
+    }
 
 }
 
@@ -1119,239 +1168,246 @@ class bf_dinner_utility {
  * Class bf_dinner_auto_assigner
  * Handles the process of auto-assigning users to dates.
  */
-class bf_dinner_auto_assigner {
+class bf_dinner_auto_assigner
+{
 
-	/**
-	 * Array of the users about to be assigned.
-	 * @var
-	 */
-	protected $users;
+    /**
+     * Array of the users about to be assigned.
+     * @var
+     */
+    protected $users;
 
-	/**
-	 * The subset of users who prefer half load.
-	 * @var
-	 */
-	protected $usersWithHalfLoad;
+    /**
+     * The subset of users who prefer half load.
+     * @var
+     */
+    protected $usersWithHalfLoad;
 
     /**
      * @var
      */
     protected $usersWithSingleLoad;
 
-	/**
-	 * Array of dates about to be assigned.
-	 *
-	 * @var
-	 */
-	protected $dates;
+    /**
+     * Array of dates about to be assigned.
+     *
+     * @var
+     */
+    protected $dates;
 
-	/**
-	 * Array storing number of points for each user.
-	 *
-	 * @var
-	 */
-	protected $userPoints;
+    /**
+     * Array storing number of points for each user.
+     *
+     * @var
+     */
+    protected $userPoints;
 
-	/**
-	 * Array storing number of points for each date.
-	 * @var
-	 */
-	protected $datePoints;
+    /**
+     * Array storing number of points for each date.
+     * @var
+     */
+    protected $datePoints;
 
 
-	/**
-	 * Contains result.
-	 *
-	 * @var
-	 */
-	protected $assigned;
+    /**
+     * Contains result.
+     *
+     * @var
+     */
+    protected $assigned;
 
     protected $interactive = FALSE;
 
 
-	/**
-	 * Array that holds information about dates being locked (can not be moved/swapped).
-	 *
-	 * @var array
-	 */
-	protected $locked = array();
+    /**
+     * Array that holds information about dates being locked (can not be moved/swapped).
+     *
+     * @var array
+     */
+    protected $locked = array();
 
-	/**
-	 * @var array
-	 */
-	protected $messages = array();
+    /**
+     * @var array
+     */
+    protected $messages = array();
 
-	/**
-	 *
-	 */
-	public function initialize() {
+    /**
+     *
+     */
+    public function initialize()
+    {
 
-	}
+    }
 
     /**
      * @param $interactive
      */
-    public function setInteractive ($interactive) {
+    public function setInteractive($interactive)
+    {
         $this->interactive = $interactive;
-	}
+    }
 
-	/**
-	 *
-	 * Load all users and count the sum of their points.
-	 * Load all dates and count the sum of their points. Stop when users points sum is reached.
-	 * Initialize places to put working data.
-	 */
-	public function loadInputData() {
-		// load users
-		$users = bf_dinner_utility::getAllUsers();
-		$this->userPoints = 0;
-		foreach ($users as $u) {
-			// fetch points total, defaults to DINNER_LOAD_SINGLE
-			$pointsTotal = DINNER_LOAD_SINGLE;
-			if ($temp = field_get_items('user', $u, DINNER_FIELD_USER_LOAD_TOTAL)) {
-				$pointsTotal = $temp[0]['value'];
-			}
-			// and points pr day, defaults to DINNER_LOAD_SINGLE
-			$pointsPrDate = DINNER_LOAD_SINGLE;
-			if ($temp = field_get_items('user', $u, DINNER_FIELD_USER_LOAD_PRDAY)) {
-				$pointsPrDate = $temp[0]['value'];
-			}
-			$house = 0;
+    /**
+     *
+     * Load all users and count the sum of their points.
+     * Load all dates and count the sum of their points. Stop when users points sum is reached.
+     * Initialize places to put working data.
+     */
+    public function loadInputData()
+    {
+        // load users
+        $users = bf_dinner_utility::getAllUsers();
+        $this->userPoints = 0;
+        foreach ($users as $u) {
+            // fetch points total, defaults to DINNER_LOAD_SINGLE
+            $pointsTotal = DINNER_LOAD_SINGLE;
+            if ($temp = field_get_items('user', $u, DINNER_FIELD_USER_LOAD_TOTAL)) {
+                $pointsTotal = $temp[0]['value'];
+            }
+            // and points pr day, defaults to DINNER_LOAD_SINGLE
+            $pointsPrDate = DINNER_LOAD_SINGLE;
+            if ($temp = field_get_items('user', $u, DINNER_FIELD_USER_LOAD_PRDAY)) {
+                $pointsPrDate = $temp[0]['value'];
+            }
+            $house = 0;
             if ($temp = field_get_items('user', $u, DINNER_FIELD_USER_HOUSE)) {
                 $house = $temp[0]['tid'];
             }
 
-			$this->users[$u->uid] = array(
-				// user's name
-				'name' => $u->uid . '<br/>' . bf_dinner_utility::getUserName($u),
+            $this->users[$u->uid] = array(
+                // user's name
+                'name' => $u->uid . '<br/>' . bf_dinner_utility::getUserName($u),
                 //
                 'house' => $house,
-				// array of dates holding status (possible / not possible) (are set just below)
-				'status' => array(),
-				// assigned points right now
-				'points' => 0,
-				// assigned points when we are finished
-				'pointstotal' => $pointsTotal,
-				// preferred points pr. date
-				'pointsprdate' => $pointsPrDate,
-			);
+                // array of dates holding status (possible / not possible) (are set just below)
+                'status' => array(),
+                // assigned points right now
+                'points' => 0,
+                // assigned points when we are finished
+                'pointstotal' => $pointsTotal,
+                // preferred points pr. date
+                'pointsprdate' => $pointsPrDate,
+            );
 
-			$this->userPoints += $pointsTotal;
+            $this->userPoints += $pointsTotal;
 
-			// if user has half load, add to a second index, so we don't have to search for them later on
-			if ($pointsPrDate == DINNER_LOAD_HALF) {
-				$this->usersWithHalfLoad[$u->uid] = $this->users[$u->uid];
-			}
+            // if user has half load, add to a second index, so we don't have to search for them later on
+            if ($pointsPrDate == DINNER_LOAD_HALF) {
+                $this->usersWithHalfLoad[$u->uid] = $this->users[$u->uid];
+            }
             if ($pointsPrDate == DINNER_LOAD_SINGLE) {
                 $this->usersWithSingleLoad[$u->uid] = $this->users[$u->uid];
             }
 
         }
 
-		// load dates
-		$nodes = bf_dinner_utility::getAllNodesBetweenDates(new DateTime('2018-03-27'), new DateTime('2018-05-15'));
-		$this->datePoints = 0;
-		foreach ($nodes as $node) {
-			$node = node_load($node->nid);
-			$date = field_get_items('node', $node, 'field_date')[0]['value'];
-			$date = new \DateTime($date);
-			$date_string = $date->format('Y-m-d');
+        // load dates
+        $nodes = bf_dinner_utility::getAllNodesBetweenDates(new DateTime('2018-03-27'), new DateTime('2018-05-15'));
+        $this->datePoints = 0;
+        foreach ($nodes as $node) {
+            $node = node_load($node->nid);
+            $date = field_get_items('node', $node, 'field_date')[0]['value'];
+            $date = new \DateTime($date);
+            $date_string = $date->format('Y-m-d');
 
-			$dateLoad = bf_dinner_utility::getDateLoad($node->nid);
-			if (! $dateLoad) {
-				continue;
-			}
+            $dateLoad = bf_dinner_utility::getDateLoad($node->nid);
+            if (!$dateLoad) {
+                continue;
+            }
 
             // Set assigned points to zero.
             $this->dates[$date_string]['date'] = $date->format('D Y-m-d');
 
             // Set assigned points to zero.
-			$this->dates[$date_string]['points'] = 0;
-			// Set target points for dinner (half/single/double).
-			$this->dates[$date_string]['goal'] = $dateLoad;
+            $this->dates[$date_string]['points'] = 0;
+            // Set target points for dinner (half/single/double).
+            $this->dates[$date_string]['goal'] = $dateLoad;
 
-			$this->assigned[$date_string] = array();
+            $this->assigned[$date_string] = array();
 
-			// If there are users attached manually already, attach them, and mark them as locked.
-			// @TODO For now, it is only possible to book an entire date in advance, not half a date (a single user).
-			if (FALSE && $users = field_get_items('node', $node, DINNER_FIELD_USERS)) {
-				foreach ($users as $i=>$u) {
-					$uid = intval($u['target_id']);
-					$this->assigned[$date_string][$i] = $uid;
-					$this->users[$uid]['points'] = intval(DINNER_LOAD_SINGLE / sizeof($users));
-				}
-				// lock the assignments, so auto-assigner won't swap them
-				$this->locked[$date_string] = TRUE;
+            // If there are users attached manually already, attach them, and mark them as locked.
+            // @TODO For now, it is only possible to book an entire date in advance, not half a date (a single user).
+            if (FALSE && $users = field_get_items('node', $node, DINNER_FIELD_USERS)) {
+                foreach ($users as $i => $u) {
+                    $uid = intval($u['target_id']);
+                    $this->assigned[$date_string][$i] = $uid;
+                    $this->users[$uid]['points'] = intval(DINNER_LOAD_SINGLE / sizeof($users));
+                }
+                // lock the assignments, so auto-assigner won't swap them
+                $this->locked[$date_string] = TRUE;
 
-				// add corresponding points to date
-				$this->dates[$date_string]['points'] = DINNER_LOAD_SINGLE;
-			} else {
-				// There are no users attached. Load assigned users from temp storage. These are not locked.
-				$uids = bf_dinner_utility::getAssignedUsers($date_string);
-				foreach ($uids as $i => $uid) {
-					$this->assigned[$date_string][$i] = $uid;
-					$this->users[$uid]['points'] = intval(DINNER_LOAD_SINGLE / sizeof($users));
-					// add corresponding points to date
-					// @TODO : should we check here that the sum is correct ?
-					$this->dates[$date_string]['points'] += bf_dinner_utility::getUserLoadPrDay($uid);
-				}
+                // add corresponding points to date
+                $this->dates[$date_string]['points'] = DINNER_LOAD_SINGLE;
+            } else {
+                // There are no users attached. Load assigned users from temp storage. These are not locked.
+                $uids = bf_dinner_utility::getAssignedUsers($date_string);
+                foreach ($uids as $i => $uid) {
+                    $this->assigned[$date_string][$i] = $uid;
+                    $this->users[$uid]['points'] = intval(DINNER_LOAD_SINGLE / sizeof($users));
+                    // add corresponding points to date
+                    // @TODO : should we check here that the sum is correct ?
+                    $this->dates[$date_string]['points'] += bf_dinner_utility::getUserLoadPrDay($uid);
+                }
 
-			}
-
-
-
-			$this->datePoints += DINNER_LOAD_SINGLE;
-			if ($this->datePoints >= $this->userPoints) {
-				break;
-			}
+            }
 
 
+            $this->datePoints += DINNER_LOAD_SINGLE;
+            if ($this->datePoints >= $this->userPoints) {
+                break;
+            }
 
-		}
 
-		foreach ($this->users as $uid=>$u) {
+        }
 
-			foreach ($this->dates as $d => $userCount) {
-				$this->users[$uid]['status'][$d] = bf_dinner_utility::getUserDateStatus($uid, $d, DINNER_USER_DATE_STATUS_POSSIBLE);
-				$this->users[$uid]['statusReal'][$d] = bf_dinner_utility::getUserDateStatus($uid, $d, DINNER_USER_DATE_STATUS_UNKNOWN);
-			}
+        foreach ($this->users as $uid => $u) {
 
-		}
+            foreach ($this->dates as $d => $userCount) {
+                $this->users[$uid]['status'][$d] = bf_dinner_utility::getUserDateStatus($uid, $d, DINNER_USER_DATE_STATUS_POSSIBLE);
+                $this->users[$uid]['statusReal'][$d] = bf_dinner_utility::getUserDateStatus($uid, $d, DINNER_USER_DATE_STATUS_UNKNOWN);
+            }
 
-		$this->shuffleDates();
+        }
+
+        $this->shuffleDates();
         $this->shuffleUsers();
 
 
         if (0) {
-            print 'assigned at end of ' . __FUNCTION__; print_r($this->assigned);
-            print 'dates at end of ' . __FUNCTION__; print_r($this->dates);
+            print 'assigned at end of ' . __FUNCTION__;
+            print_r($this->assigned);
+            print 'dates at end of ' . __FUNCTION__;
+            print_r($this->dates);
 
         }
 
 //			print_r($users); print_r($this->users); print_r($this->dates);
-	}
+    }
 
-	/**
-	 *
-	 */
-	public function makeRandomStatuses () {
-		die;
-		foreach ($this->users as $uid => &$us) {
-			foreach ($this->dates as $date => $d) {
-				$us['status'][$date] = rand(0, 100) < 15 ? 1 : 0;
-			}
-		}
+    /**
+     *
+     */
+    public function makeRandomStatuses()
+    {
+        die;
+        foreach ($this->users as $uid => &$us) {
+            foreach ($this->dates as $date => $d) {
+                $us['status'][$date] = rand(0, 100) < 15 ? 1 : 0;
+            }
+        }
 
-	}
+    }
 
     /**
      * @return mixed
      */
-    public function getAssigned() {
+    public function getAssigned()
+    {
         return $this->assigned;
-	}
+    }
 
-    public function clearTemporaryForSeries($series) {
+    public function clearTemporaryForSeries($series)
+    {
         if (empty($series)) {
             return;
         }
@@ -1362,129 +1418,137 @@ class bf_dinner_auto_assigner {
                 'assigned' => 0,
             ))
             ->execute();
-	}
+    }
 
-	/**
-	 * @return int
-	 */
-	public function getDateCount () {
-		return sizeof($this->dates);
-	}
+    /**
+     * @return int
+     */
+    public function getDateCount()
+    {
+        return sizeof($this->dates);
+    }
 
-	/**
-	 * @return int
-	 */
-	public function getUserCount () {
-		return sizeof($this->users);
-	}
+    /**
+     * @return int
+     */
+    public function getUserCount()
+    {
+        return sizeof($this->users);
+    }
 
-	/**
-	 * If users are not shuffled, and percentage of status 1 is high, it will result in users with low user-id always assigned to early dates
-	 * and high user-id to late dates.
-	 * This will shuffle users so they appear in random order before start.
-	 */
-	public function shuffleUsers () {
+    /**
+     * If users are not shuffled, and percentage of status 1 is high, it will result in users with low user-id always assigned to early dates
+     * and high user-id to late dates.
+     * This will shuffle users so they appear in random order before start.
+     */
+    public function shuffleUsers()
+    {
 
-	}
+    }
 
-    public function orderUsers () {
+    public function orderUsers()
+    {
 
-	}
+    }
 
-	/**
-	 * If dates are not shuffled, it will result in users that chose half dinner load, will have the two half dinner loads on adjacent dates,
-	 * or very close together. The higher the percentage of status 1, the closer they will be.
-	 * This will shuffle dates so they appear in random order before start.
-	 */
-	public function shuffleDates () {
+    /**
+     * If dates are not shuffled, it will result in users that chose half dinner load, will have the two half dinner loads on adjacent dates,
+     * or very close together. The higher the percentage of status 1, the closer they will be.
+     * This will shuffle dates so they appear in random order before start.
+     */
+    public function shuffleDates()
+    {
         uasort($this->dates, function ($a, $b) {
             return rand(-1, 1);
         });
-	}
+    }
 
     /**
      *
      */
-    public function orderDates () {
+    public function orderDates()
+    {
         ksort($this->dates);
     }
 
-	/**
-	 *
-	 */
-	public function validateInput() {
-		$this->uk = array();
-		$this->dk = array();
-		$this->ukHistogram = array();
-		$this->dkHistogram = array();
+    /**
+     *
+     */
+    public function validateInput()
+    {
+        $this->uk = array();
+        $this->dk = array();
+        $this->ukHistogram = array();
+        $this->dkHistogram = array();
 
-		$this->totalDatePoints = 0;
-		$this->totalUserPoints = 0;
+        $this->totalDatePoints = 0;
+        $this->totalUserPoints = 0;
 
 
-		foreach ($this->dates as $date => $userCount) {
-			$this->dk[$date] = 0;
-			$this->totalDatePoints += DINNER_LOAD_SINGLE;
-		}
+        foreach ($this->dates as $date => $userCount) {
+            $this->dk[$date] = 0;
+            $this->totalDatePoints += DINNER_LOAD_SINGLE;
+        }
 
-		$prefOtherCount = 0;
-		foreach ($this->users as $uid => $us) {
-			$this->totalUserPoints += $us['pointstotal'];
+        $prefOtherCount = 0;
+        foreach ($this->users as $uid => $us) {
+            $this->totalUserPoints += $us['pointstotal'];
 //			$this->uk[$uid] = 0;
-			foreach ($us['status'] as $d => $i) {
-				if (DINNER_USER_DATE_STATUS_POSSIBLE == $i) {
-					$this->uk[$uid]++;
-					$this->dk[$d]++;
-				}
-			}
+            foreach ($us['status'] as $d => $i) {
+                if (DINNER_USER_DATE_STATUS_POSSIBLE == $i) {
+                    $this->uk[$uid]++;
+                    $this->dk[$d]++;
+                }
+            }
 
-			if ($us['pointsprdate'] == DINNER_LOAD_HALF) {
-				$prefOtherCount++;
-				$prefOtherUid = $uid;
-			}
-		}
+            if ($us['pointsprdate'] == DINNER_LOAD_HALF) {
+                $prefOtherCount++;
+                $prefOtherUid = $uid;
+            }
+        }
 //		print_r($this->uk);print_r($this->dk);
 
-		foreach ($this->uk as $uid => $i) {
-			$this->ukHistogram[$i] ++;
-			if ($i == 0) {
-				drupal_set_message("won't work for user $uid\n");
-				return FALSE;
-			}
+        foreach ($this->uk as $uid => $i) {
+            $this->ukHistogram[$i]++;
+            if ($i == 0) {
+                drupal_set_message("won't work for user $uid\n");
+                return FALSE;
+            }
 
-		}
-		foreach ($this->dk as $date => $i) {
-			$this->dkHistogram[$i] ++;
-			if ($i == 0) {
-				drupal_set_message("won't work for date $date \n");
-				return FALSE;
-			}
-		}
+        }
+        foreach ($this->dk as $date => $i) {
+            $this->dkHistogram[$i]++;
+            if ($i == 0) {
+                drupal_set_message("won't work for date $date \n");
+                return FALSE;
+            }
+        }
 
-		if ($this->totalUserPoints != $this->totalDatePoints) {
-			drupal_set_message("there is mismatch in points (users:$this->totalUserPoints vs. dates:$this->totalDatePoints)");
-			return FALSE;
-		}
+        if ($this->totalUserPoints != $this->totalDatePoints) {
+            drupal_set_message("there is mismatch in points (users:$this->totalUserPoints vs. dates:$this->totalDatePoints)");
+            return FALSE;
+        }
 
-		if ($prefOtherCount == 1) {
+        if ($prefOtherCount == 1) {
             $this->users[$prefOtherUid]['pointsprdate'] = DINNER_LOAD_SINGLE;
             $this->usersWithHalfLoad = [];
             $this->usersWithSingleLoad[$prefOtherUid] = $this->users[$prefOtherUid];
-			drupal_set_message("Only user $prefOtherUid has half load. It has been set to full");
-			return FALSE;
-		}
+            drupal_set_message("Only user $prefOtherUid has half load. It has been set to full");
+            return FALSE;
+        }
 
-		return TRUE;
-	}
+        return TRUE;
+    }
 
-	/**
-	 *
-	 * Preconditions :
-	 * - no assigned users
-	 */
-	public function assignHalfLoads () {
-		$users = $this->usersWithHalfLoad;
-        if (! sizeof($users)) {
+    /**
+     *
+     * Preconditions :
+     * - no assigned users
+     */
+    public function assignHalfLoads()
+    {
+        $users = $this->usersWithHalfLoad;
+        if (!sizeof($users)) {
             return;
         }
         if (TRUE) {
@@ -1514,15 +1578,15 @@ class bf_dinner_auto_assigner {
                 $uids[] = implode(',', $a);
             }
         } else {
-		    $uids = array_keys($users);
+            $uids = array_keys($users);
 
         }
 
-		shuffle($uids);
+        shuffle($uids);
 
 
-		$permutations = array();
-		$this->generatePermutations($uids, array(), $permutations);
+        $permutations = array();
+        $this->generatePermutations($uids, array(), $permutations);
 
         // Now that permutations are generated, separate users again.
         $temp = $permutations;
@@ -1541,22 +1605,22 @@ class bf_dinner_auto_assigner {
          * At this point $permutations is an array of x! elements, where x is the number of users wishing half load pr. day
          */
         foreach ($permutations as $count => $uids) {
-			$u2 = $uids[sizeof($uids) - 1];
+            $u2 = $uids[sizeof($uids) - 1];
 
             $this->assigned = array();
             $dates = $this->dates;
 
-			$a = 0;
-			foreach ($uids as $u1) {
-				foreach ($dates as $date => $dummy) {
-					if (
-					    ! empty($this->users[$u1]['status'][$date])
-                        && ! empty($this->users[$u2]['status'][$date])
-						&& empty($this->assigned[$date])
-					) {
+            $a = 0;
+            foreach ($uids as $u1) {
+                foreach ($dates as $date => $dummy) {
+                    if (
+                        !empty($this->users[$u1]['status'][$date])
+                        && !empty($this->users[$u2]['status'][$date])
+                        && empty($this->assigned[$date])
+                    ) {
 
-					    $valid = TRUE;
-					    foreach (array($u1, $u2) as $uid) {
+                        $valid = TRUE;
+                        foreach (array($u1, $u2) as $uid) {
 
                             foreach ($this->assigned as $d => $assigned) {
                                 if (is_array($assigned) && in_array($uid, $assigned)) {
@@ -1576,29 +1640,29 @@ class bf_dinner_auto_assigner {
                             $users[$u1]['points'] += DINNER_LOAD_HALF;
                             $users[$u2]['points'] += DINNER_LOAD_HALF;
 
-                            $a ++;
-    						break;
+                            $a++;
+                            break;
                         }
-					}
+                    }
 
-				}
+                }
 
-				$u2 = $u1;
-			}
+                $u2 = $u1;
+            }
 
-			if ($a >= sizeof($users)) {
-			    $this->messages[] = sprintf('All half load users placed after %d permutations', $count);
-				break;
-			}
-		}
+            if ($a >= sizeof($users)) {
+                $this->messages[] = sprintf('All half load users placed after %d permutations', $count);
+                break;
+            }
+        }
 
 //		echo "permutation number $count \n";
 
-		foreach ($users as $uid => $us) {
-			$this->users[$uid]['points'] = $us['points'];
-		}
+        foreach ($users as $uid => $us) {
+            $this->users[$uid]['points'] = $us['points'];
+        }
 
-		$this->dates = $dates;
+        $this->dates = $dates;
 
         print 'assigned at end of ' . __FUNCTION__;
         print_r($this->assigned);
@@ -1607,42 +1671,43 @@ class bf_dinner_auto_assigner {
 
     }
 
-	/**
-	 * 1. Check if there is a user with not enough points, a date with not enough points, and that user can be assigned that date. If there is, asssign.
-	 * 2. If not : find an unassigned date, then find a random date, and check if one user can be moved from one to the other.
-	 * 3. Repeat step 1 and 2 a thousand times or until all dates have enough points.
-	 *
-	 */
-	public function assignSingleLoads () {
-		$allDone = FALSE;
-		$count = 0;
-		$swaps = 0;
+    /**
+     * 1. Check if there is a user with not enough points, a date with not enough points, and that user can be assigned that date. If there is, asssign.
+     * 2. If not : find an unassigned date, then find a random date, and check if one user can be moved from one to the other.
+     * 3. Repeat step 1 and 2 a thousand times or until all dates have enough points.
+     *
+     */
+    public function assignSingleLoads()
+    {
+        $allDone = FALSE;
+        $count = 0;
+        $swaps = 0;
 
-		while (!$allDone && $count <= 1000) {
-			$changed = FALSE;
-			// loop through all dates and all users and look for holes
-			foreach ($this->dates as $date => $p) {
-				// if this date has sufficient points, skip
-				if ($this->dates[$date]['points'] >= $this->dates[$date]['goal']) {
-					continue;
-				}
+        while (!$allDone && $count <= 1000) {
+            $changed = FALSE;
+            // loop through all dates and all users and look for holes
+            foreach ($this->dates as $date => $p) {
+                // if this date has sufficient points, skip
+                if ($this->dates[$date]['points'] >= $this->dates[$date]['goal']) {
+                    continue;
+                }
 
                 foreach ($this->users as $uid => $us) {
 
-					$points = $us['pointsprdate'];
+                    $points = $us['pointsprdate'];
 
-					// if this user's points would make the date's points exceed, skip
-					if ($this->dates[$date]['points'] + $points > $this->dates[$date]['goal']) {
-						continue;
-					}
+                    // if this user's points would make the date's points exceed, skip
+                    if ($this->dates[$date]['points'] + $points > $this->dates[$date]['goal']) {
+                        continue;
+                    }
 
-					// if user has sufficient points, skip
-					if ($this->users[$uid]['points'] >= $this->users[$uid]['pointstotal']) {
-						continue;
-					}
+                    // if user has sufficient points, skip
+                    if ($this->users[$uid]['points'] >= $this->users[$uid]['pointstotal']) {
+                        continue;
+                    }
 
 
-					if ($this->users[$uid]['points'] > 0) {
+                    if ($this->users[$uid]['points'] > 0) {
                         foreach ($this->assigned as $d => $assigned) {
                             if (is_array($assigned) && in_array($uid, $assigned)) {
                                 echo "<p>uid: $uid - date: $date - other assigned date: $d.</p>";
@@ -1650,86 +1715,86 @@ class bf_dinner_auto_assigner {
                                     continue 2;
                                 }
                             }
-					    }
+                        }
                     }
 
-					// if user is already assigned to this date, skip
-					if (in_array($uid, $this->assigned[$date])) {
-						continue;
-					}
+                    // if user is already assigned to this date, skip
+                    if (in_array($uid, $this->assigned[$date])) {
+                        continue;
+                    }
 
-					// if it is not possible for user to be assigned this date, skip
-					if (! $us['status'][$date]) {
-						continue;
-					}
+                    // if it is not possible for user to be assigned this date, skip
+                    if (!$us['status'][$date]) {
+                        continue;
+                    }
 
-					// assign user
-					$changed = TRUE;
-					$this->assigned[$date][] = $uid;
-					$this->users[$uid]['points'] += $points;
-					$this->dates[$date]['points'] += $points;
-					//
-
-
-				}
-
-			}
-			/*
-						echo "assigned:";
-						print_r($this->assigned);
-			*/
-
-			if (!$changed) {
-
-				/*
-				$unassignedDates = array();
-				$unassignedUsers = array();
-				foreach ($this->assigned as $date => $i) {
-					if (!$i) {
-						$unassignedDates[] = $date;
-					}
-				}
-				foreach ($this->users as $uid => $user) {
-					if (!in_array($uid, $this->assigned)) {
-						$unassignedUsers[] = $uid;
-					}
-
-				}
-
-				//echo "unassigned dates : " . implode(',', $unassignedDates). ' unassigned users :' . implode(',', $unassignedUsers) . "\n";
-
-				*/
-				// no holes found - swap an empty with a random
-				foreach ($this->dates as $date => $i) {
-					if (! empty($this->locked[$date])) {
-						continue;
-					}
-					if ($i['points'] < $i['goal']) {
-						$missingPoints = $i['goal'] - $i['points'];
-						$d1 = $date;
-
-						// pick a random date
-						$randomDate = array_keys($this->assigned)[rand(0, sizeof($this->assigned) - 1)];
-
-						// if we've picked the same date, no point in swapping, so skip
-						if ($d1 == $randomDate) {
-							continue;
-						}
-
-						// if there are no assignees on the random date, skip
-						if (! sizeof($this->assigned[$randomDate])) {
-							continue;
-						}
-						// if the random date is locked, skip
-						if (! empty($this->locked[$randomDate])) {
-							continue;
-						}
+                    // assign user
+                    $changed = TRUE;
+                    $this->assigned[$date][] = $uid;
+                    $this->users[$uid]['points'] += $points;
+                    $this->dates[$date]['points'] += $points;
+                    //
 
 
-						// choose strategy : swap a single user or swap entire date
-						if (TRUE) {
+                }
 
-							// swap entire date
+            }
+            /*
+                        echo "assigned:";
+                        print_r($this->assigned);
+            */
+
+            if (!$changed) {
+
+                /*
+                $unassignedDates = array();
+                $unassignedUsers = array();
+                foreach ($this->assigned as $date => $i) {
+                    if (!$i) {
+                        $unassignedDates[] = $date;
+                    }
+                }
+                foreach ($this->users as $uid => $user) {
+                    if (!in_array($uid, $this->assigned)) {
+                        $unassignedUsers[] = $uid;
+                    }
+
+                }
+
+                //echo "unassigned dates : " . implode(',', $unassignedDates). ' unassigned users :' . implode(',', $unassignedUsers) . "\n";
+
+                */
+                // no holes found - swap an empty with a random
+                foreach ($this->dates as $date => $i) {
+                    if (!empty($this->locked[$date])) {
+                        continue;
+                    }
+                    if ($i['points'] < $i['goal']) {
+                        $missingPoints = $i['goal'] - $i['points'];
+                        $d1 = $date;
+
+                        // pick a random date
+                        $randomDate = array_keys($this->assigned)[rand(0, sizeof($this->assigned) - 1)];
+
+                        // if we've picked the same date, no point in swapping, so skip
+                        if ($d1 == $randomDate) {
+                            continue;
+                        }
+
+                        // if there are no assignees on the random date, skip
+                        if (!sizeof($this->assigned[$randomDate])) {
+                            continue;
+                        }
+                        // if the random date is locked, skip
+                        if (!empty($this->locked[$randomDate])) {
+                            continue;
+                        }
+
+
+                        // choose strategy : swap a single user or swap entire date
+                        if (TRUE) {
+
+                            // swap entire date
 
                             $points = $this->dates[$d1]['goal'];
 
@@ -1740,9 +1805,9 @@ class bf_dinner_auto_assigner {
 
                             $canSwap = TRUE;
 
-							// if a user assigned to the random date can not be swapped, skip entire swap
-							foreach ($this->assigned[$randomDate] as $uid) {
-								$canSwap &= ! empty($this->users[$uid]['status'][$d1]);
+                            // if a user assigned to the random date can not be swapped, skip entire swap
+                            foreach ($this->assigned[$randomDate] as $uid) {
+                                $canSwap &= !empty($this->users[$uid]['status'][$d1]);
 
                                 // find this users other assigned date, and check distance
                                 foreach ($this->assigned[$d1] as $d => $assigned) {
@@ -1752,123 +1817,125 @@ class bf_dinner_auto_assigner {
                                             $canSwap = FALSE;
                                         }
                                     }
-                               }
+                                }
 
                             }
 
-                            if (! $canSwap) {
-							    continue;
+                            if (!$canSwap) {
+                                continue;
                             }
 
-							// move user $u2 from $d2 to $d1, and move the corresponding points
-							echo "<p>move all users (" . implode(',', $this->assigned[$randomDate]) . ") from $randomDate to $d1, and move the corresponding $points points ({$this->dates[$randomDate]['points']} , {$this->dates[$d1]['points']})";
-							// assign user(s) to date d1
-							$this->assigned[$d1] = $this->assigned[$randomDate];
+                            // move user $u2 from $d2 to $d1, and move the corresponding points
+                            echo "<p>move all users (" . implode(',', $this->assigned[$randomDate]) . ") from $randomDate to $d1, and move the corresponding $points points ({$this->dates[$randomDate]['points']} , {$this->dates[$d1]['points']})";
+                            // assign user(s) to date d1
+                            $this->assigned[$d1] = $this->assigned[$randomDate];
                             // unassign user(s) from randomDate
                             $this->assigned[$randomDate] = array();
                             // add points
-							$this->dates[$d1]['points'] += $points;
+                            $this->dates[$d1]['points'] += $points;
                             // subtract points
-							$this->dates[$randomDate]['points'] -= $points;
+                            $this->dates[$randomDate]['points'] -= $points;
 
-							echo "-> ({$this->dates[$randomDate]['points']} , {$this->dates[$d1]['points']})</p>";
+                            echo "-> ({$this->dates[$randomDate]['points']} , {$this->dates[$d1]['points']})</p>";
 
-						} else {
+                        } else {
 
-							// find first assigned user
-							$u2 = $this->assigned[$randomDate][0];
+                            // find first assigned user
+                            $u2 = $this->assigned[$randomDate][0];
 
-							// if this user is already assigned, skip
-							if (in_array($u2, $this->assigned[$d1])) {
-								continue;
-							}
+                            // if this user is already assigned, skip
+                            if (in_array($u2, $this->assigned[$d1])) {
+                                continue;
+                            }
 
-							// if the user assigned the random date can not be swapped, skip
-							if (empty($this->users[$u2]['status'][$d1])) {
-								continue;
-							}
+                            // if the user assigned the random date can not be swapped, skip
+                            if (empty($this->users[$u2]['status'][$d1])) {
+                                continue;
+                            }
 
-							$points = $this->users[$this->assigned[$randomDate][0]]['pointsprdate'];
+                            $points = $this->users[$this->assigned[$randomDate][0]]['pointsprdate'];
 
-							if ($points != $missingPoints) {
-								continue;
-							}
+                            if ($points != $missingPoints) {
+                                continue;
+                            }
 
-							 // move user $u2 from $d2 to $d1, and move the corresponding points
-							echo "<p>move user $u2 from $randomDate to $d1, and move the corresponding $points points ({$this->dates[$randomDate]['points']} , {$this->dates[$d1]['points']})";
-							// add user u2 to date d1
-							$this->assigned[$d1][] = $u2;
-							$this->dates[$d1]['points'] += $points;
-							// remove user u2 from date d2
-							foreach ($this->assigned[$randomDate] as $i => $uid) {
-								if ($uid == $u2) {
-									$this->assigned[$randomDate] = array_merge(
-										array_slice($this->assigned[$randomDate], 0, $i),
-										array_slice($this->assigned[$randomDate], $i + 1)
-									);
-									break;
-								}
-							}
-							$this->dates[$randomDate]['points'] -= $points;
-							echo "-> ({$this->dates[$randomDate]['points']} , {$this->dates[$d1]['points']})</p>";
-						}
+                            // move user $u2 from $d2 to $d1, and move the corresponding points
+                            echo "<p>move user $u2 from $randomDate to $d1, and move the corresponding $points points ({$this->dates[$randomDate]['points']} , {$this->dates[$d1]['points']})";
+                            // add user u2 to date d1
+                            $this->assigned[$d1][] = $u2;
+                            $this->dates[$d1]['points'] += $points;
+                            // remove user u2 from date d2
+                            foreach ($this->assigned[$randomDate] as $i => $uid) {
+                                if ($uid == $u2) {
+                                    $this->assigned[$randomDate] = array_merge(
+                                        array_slice($this->assigned[$randomDate], 0, $i),
+                                        array_slice($this->assigned[$randomDate], $i + 1)
+                                    );
+                                    break;
+                                }
+                            }
+                            $this->dates[$randomDate]['points'] -= $points;
+                            echo "-> ({$this->dates[$randomDate]['points']} , {$this->dates[$d1]['points']})</p>";
+                        }
 
-						// increase swap counter
-						$swaps++;
-					}
-				}
+                        // increase swap counter
+                        $swaps++;
+                    }
+                }
 
-			}
+            }
 
-			$count ++;
+            $count++;
 
-		}
+        }
 
-		$allDone = TRUE;
-		// all done means all dates have two points
-		foreach ($this->dates as $date => $p) {
-			$allDone &= (bool)($p['points'] == $p['goal']);
-		}
-
-
-		if ($allDone) {
-			$this->messages[] = "Success efter $swaps ombytninger";
-		} else {
-			$this->messages[] = "Fejl. Giver op efter $count runder.";
-		}
+        $allDone = TRUE;
+        // all done means all dates have two points
+        foreach ($this->dates as $date => $p) {
+            $allDone &= (bool)($p['points'] == $p['goal']);
+        }
 
 
-	}
+        if ($allDone) {
+            $this->messages[] = "Success efter $swaps ombytninger";
+        } else {
+            $this->messages[] = "Fejl. Giver op efter $count runder.";
+        }
 
-	/**
-	 * Makes an array of all permutations of array. Is used for assigning users who chose half load.
-	 *
-	 * Thanks to http://stackoverflow.com/questions/5506888/permutations-all-possible-sets-of-numbers
-	 *
-	 * @param $items
-	 * @param array $perms
-	 * @param $result
-	 */
-	protected function generatePermutations($items, $perms = array(), &$result) {
-		if (empty($items)) {
-			$result[] = $perms;
-		} else {
-			for ($i = count($items) - 1; $i >= 0; --$i) {
-				$newitems = $items;
-				$newperms = $perms;
-				list($foo) = array_splice($newitems, $i, 1);
-				array_unshift($newperms, $foo);
-				$this->generatePermutations($newitems, $newperms, $result);
-			}
-		}
 
-	}
+    }
+
+    /**
+     * Makes an array of all permutations of array. Is used for assigning users who chose half load.
+     *
+     * Thanks to http://stackoverflow.com/questions/5506888/permutations-all-possible-sets-of-numbers
+     *
+     * @param $items
+     * @param array $perms
+     * @param $result
+     */
+    protected function generatePermutations($items, $perms = array(), &$result)
+    {
+        if (empty($items)) {
+            $result[] = $perms;
+        } else {
+            for ($i = count($items) - 1; $i >= 0; --$i) {
+                $newitems = $items;
+                $newperms = $perms;
+                list($foo) = array_splice($newitems, $i, 1);
+                array_unshift($newperms, $foo);
+                $this->generatePermutations($newitems, $newperms, $result);
+            }
+        }
+
+    }
 
     /**
      * @param $d1 string
      * @param $d2 string
      */
-    public function getDaysDifference ($d1, $d2) {
+    public function getDaysDifference($d1, $d2)
+    {
         $u1 = strtotime($d1);
         $u2 = strtotime($d2);
         return intval((abs($u1 - $u2) / 86400));
@@ -1883,105 +1950,109 @@ class bf_dinner_auto_assigner {
      *
      * @return int
      */
-    public function getMinimumIntervalDays () {
+    public function getMinimumIntervalDays()
+    {
         return 3;
     }
 
-	/**
-	 *
+    /**
+     *
      * Write contents of $this->assigned to DB - temporary part.
      *
-	 */
-	public function writeToTemporary () {
-		foreach ($this->assigned as $date => $uids) {
-			bf_dinner_utility::setDateAssignedUsers($uids, $date);
-		}
-	}
+     */
+    public function writeToTemporary()
+    {
+        foreach ($this->assigned as $date => $uids) {
+            bf_dinner_utility::setDateAssignedUsers($uids, $date);
+        }
+    }
 
 
     /**
      * @return array
      */
-	public function getMessages () {
-		return $this->messages;
-	}
+    public function getMessages()
+    {
+        return $this->messages;
+    }
 
-	/**
-	 * Make html for a table that shows the current status of the assigner object.
-	 *
-	 * @return string
-	 */
-	public function getAssignmentHtml () {
+    /**
+     * Make html for a table that shows the current status of the assigner object.
+     *
+     * @return string
+     */
+    public function getAssignmentHtml()
+    {
         drupal_add_js('misc/tableheader.js');
 
-	    $this->orderDates();
+        $this->orderDates();
 
-		// build json for js widget
-		foreach ($this->users as $uid => $u) {
-			$json['users'][$uid] = array(
-				'pointstotal' => $u['pointstotal'],
-				'pointsprdate' => $u['pointsprdate'],
+        // build json for js widget
+        foreach ($this->users as $uid => $u) {
+            $json['users'][$uid] = array(
+                'pointstotal' => $u['pointstotal'],
+                'pointsprdate' => $u['pointsprdate'],
 
-			);
-		}
-		foreach ($this->dates as $date => $d) {
-			$json['dates'][$date] = array(
-				'pointstotal' => $d['goal'],
-			);
-		}
-		$out = '<script>var config = ' . json_encode($json, JSON_PRETTY_PRINT) . ';</script>';
+            );
+        }
+        foreach ($this->dates as $date => $d) {
+            $json['dates'][$date] = array(
+                'pointstotal' => $d['goal'],
+            );
+        }
+        $out = '<script>var config = ' . json_encode($json, JSON_PRETTY_PRINT) . ';</script>';
 
-		$out .= '<link rel="stylesheet" href="/sites/all/modules/bf_dinner/css/bf_dinner.css"></link>';
-		$out .= '<script src="/sites/all/modules/bf_dinner/js/admin.js"></script>';
-		$out .= '<ul>';
-		$out .= sprintf('<li>%s : %d</li>', 'Users' , $this->getUserCount()) ;
-		$out .= sprintf('<li>%s : %d</li>', 'Dates' , $this->getDateCount()) ;
-		$out .= sprintf('<li>%s : %d</li>', 'User points' , $this->totalUserPoints) ;
-		$out .= sprintf('<li>%s : %d</li>', 'Date points' , $this->totalDatePoints) ;
-		$out .= '</ul>';
+        $out .= '<link rel="stylesheet" href="/sites/all/modules/bf_dinner/css/bf_dinner.css"></link>';
+        $out .= '<script src="/sites/all/modules/bf_dinner/js/admin.js"></script>';
+        $out .= '<ul>';
+        $out .= sprintf('<li>%s : %d</li>', 'Users', $this->getUserCount());
+        $out .= sprintf('<li>%s : %d</li>', 'Dates', $this->getDateCount());
+        $out .= sprintf('<li>%s : %d</li>', 'User points', $this->totalUserPoints);
+        $out .= sprintf('<li>%s : %d</li>', 'Date points', $this->totalDatePoints);
+        $out .= '</ul>';
 
-		$out .= "<table class='assigned-table scroll sticky-enabled" . ($this->interactive ? ' interactive' : '') . "'>
+        $out .= "<table class='assigned-table scroll sticky-enabled" . ($this->interactive ? ' interactive' : '') . "'>
 		<thead>
 		<tr><th>user</th><th></th><th></th>";
 
-		foreach ($this->users as $uid => $i) {
-			$out .= '<th class="user user-' . $uid . '" data-uid="' . $uid . '">' . str_pad($i['name'], 3, ' ', STR_PAD_LEFT) . "</th>";
-		}
+        foreach ($this->users as $uid => $i) {
+            $out .= '<th class="user user-' . $uid . '" data-uid="' . $uid . '">' . str_pad($i['name'], 3, ' ', STR_PAD_LEFT) . "</th>";
+        }
 
 
-		$out .= '<td>Points</td>';
-		$out .= "<tr><th>total</th><th></th><th></th>";
-		foreach ($this->users as $uid => $i) {
-			$out .= '<th class="user user-' . $uid . '" data-uid="' . $uid . '">' . str_pad($i['pointstotal'], 3, ' ', STR_PAD_LEFT) . ' / ' . str_pad($i['pointsprdate'], 3, ' ', STR_PAD_LEFT) . "</th>";
-		}
+        $out .= '<td>Points</td>';
+        $out .= "<tr><th>total</th><th></th><th></th>";
+        foreach ($this->users as $uid => $i) {
+            $out .= '<th class="user user-' . $uid . '" data-uid="' . $uid . '">' . str_pad($i['pointstotal'], 3, ' ', STR_PAD_LEFT) . ' / ' . str_pad($i['pointsprdate'], 3, ' ', STR_PAD_LEFT) . "</th>";
+        }
 
-		$out .= '<td></td>';
+        $out .= '<td></td>';
         $out .= '</thead>';
         $out .= '</tbody>';
 
-		foreach ($this->dates as $date => $p) {
+        foreach ($this->dates as $date => $p) {
 
-			$out .= "<tr>";
-			$out .= "<th class='date date-$date' data-date='$date'>" . $p['date'];
+            $out .= "<tr>";
+            $out .= "<th class='date date-$date' data-date='$date'>" . $p['date'];
 
-			$out .= "<th class='date date-$date' data-date='$date'>" . $p['goal'];
+            $out .= "<th class='date date-$date' data-date='$date'>" . $p['goal'];
             $out .= "<th class='date date-$date' data-date='$date'>" . $p['points'];
-			$_house = 0;
+            $_house = 0;
             foreach ($this->users as $uid => $i) {
-			    $isAssigned = in_array($uid, $this->assigned[$date]);
-				$isLocked = $this->locked[$date];
+                $isAssigned = in_array($uid, $this->assigned[$date]);
+                $isLocked = $this->locked[$date];
 
-				$class = 'status';
-				$class .= ' user-' . $uid;
-				$class .= ' date-' . $date;
+                $class = 'status';
+                $class .= ' user-' . $uid;
+                $class .= ' date-' . $date;
 
-				$class .=  ' ' . (DINNER_USER_DATE_STATUS_UNKNOWN == $i['statusReal'][$date] ? 'status-unknown' : ($i['statusReal'][$date] ? 'status-possible' : 'status-not-possible'));
-				$class .=  ' ' . ($isAssigned ? 'assigned-1' : 'assigned-0');
-				switch ($i['pointstotal']) {
-					case DINNER_LOAD_DOUBLE :
-						$class .= ' user-pointstotal-double';
-						break;
-				}
+                $class .= ' ' . (DINNER_USER_DATE_STATUS_UNKNOWN == $i['statusReal'][$date] ? 'status-unknown' : ($i['statusReal'][$date] ? 'status-possible' : 'status-not-possible'));
+                $class .= ' ' . ($isAssigned ? 'assigned-1' : 'assigned-0');
+                switch ($i['pointstotal']) {
+                    case DINNER_LOAD_DOUBLE :
+                        $class .= ' user-pointstotal-double';
+                        break;
+                }
 
                 $class .= ' house-' . $i['house'];
                 if ($i['house'] != $_house) {
@@ -1991,36 +2062,38 @@ class bf_dinner_auto_assigner {
 
                 $text = $isAssigned ? ($isLocked ? 'L' : 'X') : '';
 
-				$out .= "<td class='$class' data-uid='$uid' data-date='$date'><div>" . $text . "</div></td>";
+                $out .= "<td class='$class' data-uid='$uid' data-date='$date'><div>" . $text . "</div></td>";
 
-			}
+            }
 
-			$out .= '<td>' . $this->dk[$date] . '</td>';
+            $out .= '<td>' . $this->dk[$date] . '</td>';
 
-			$out .= "</tr>";
-		}
+            $out .= "</tr>";
+        }
 
-		$out .= '<tr>';
-		$out .= '<th>Total</th>';
-		$out .= '<th>' . /* total */ '</th>';
-		$out .= '<th>' . /* total */ '</th>';
-		foreach ($this->users as $uid => $i) {
-			$out .= '<td>' . $this->uk[$uid] . '</td>';
-		}
+        $out .= '<tr>';
+        $out .= '<th>Total</th>';
+        $out .= '<th>' . /* total */
+            '</th>';
+        $out .= '<th>' . /* total */
+            '</th>';
+        foreach ($this->users as $uid => $i) {
+            $out .= '<td>' . $this->uk[$uid] . '</td>';
+        }
 
-		$totalKs = array_sum($this->uk);
-		$out .= '<td>' . sprintf('%d (%d %%)', $totalKs, ($totalKs *100 / ($this->getUserCount() * $this->getDateCount()))) . '</td>';
-		$out .= '</tr>';
+        $totalKs = array_sum($this->uk);
+        $out .= '<td>' . sprintf('%d (%d %%)', $totalKs, ($totalKs * 100 / ($this->getUserCount() * $this->getDateCount()))) . '</td>';
+        $out .= '</tr>';
 
-		$out .= '</tbody></table>';
+        $out .= '</tbody></table>';
 
-		$out .= '<div class="legend"><div class="legend-bar status status-unknown">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div> Ikke udfyldt </div>';
-		$out .= '<div class="legend"><div class="legend-bar status status-not-possible">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div> Kan ikke lave mad </div>';
-		$out .= '<div class="legend"><div class="legend-bar status status-possible">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div> Kan lave mad </div>';
-		$out .= '<div class="legend"><div class="legend-bar">X</div>Tildelt automatisk </div>';
-		$out .= '<div class="legend"><div class="legend-bar">L</div>Tildelt manuelt</div>';
+        $out .= '<div class="legend"><div class="legend-bar status status-unknown">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div> Ikke udfyldt </div>';
+        $out .= '<div class="legend"><div class="legend-bar status status-not-possible">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div> Kan ikke lave mad </div>';
+        $out .= '<div class="legend"><div class="legend-bar status status-possible">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div> Kan lave mad </div>';
+        $out .= '<div class="legend"><div class="legend-bar">X</div>Tildelt automatisk </div>';
+        $out .= '<div class="legend"><div class="legend-bar">L</div>Tildelt manuelt</div>';
 
-		return $out;
-	}
+        return $out;
+    }
 }
 
