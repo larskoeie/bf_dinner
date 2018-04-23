@@ -1,0 +1,127 @@
+<?php
+
+/*
+ 	CREATE TABLE `bf_dinner_user_date_status` (  `uid` int(11) NOT NULL DEFAULT '0',  `date` date DEFAULT NULL,  `status` tinyint(4) DEFAULT NULL,  `assigned` tinyint(4) NOT NULL DEFAULT '0',  `changed` int(11) NOT NULL DEFAULT '0') ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+  	CREATE TABLE `bf_dinner_user_date_status` (
+  		`uid` int(11) NOT NULL DEFAULT '0',
+		`date` date DEFAULT NULL,
+		`status` tinyint(4) DEFAULT NULL,
+		`assigned` tinyint(4) NOT NULL DEFAULT '0',
+		`changed` int(11) NOT NULL DEFAULT '0'
+	) ENGINE=InnoDB DEFAULT CHARSET=latin1
+ */
+function _bf_dinner_schema() {
+
+	$schema['bf_dinner_user_date_status'] = array(
+		'description' => 'The base table for nodes.',
+		'fields' => array(
+			'uid' => array(
+				'type' => 'int',
+				'unsigned' => TRUE,
+				'not null' => TRUE,
+				'default' => 0,
+			),
+			'date' => array(
+				'mysql_type' => 'date',
+				'not null' => FALSE,
+				'default' => NULL,
+			),
+		),
+		'indexes' => array(
+			'node_changed' => array('changed'),
+			'node_created' => array('created'),
+			'node_moderate' => array('moderate'),
+			'node_frontpage' => array(
+				'promote',
+				'status',
+				'sticky',
+				'created'
+			),
+			'node_status_type' => array(
+				'status',
+				'type',
+				'nid'
+			),
+			'node_title_type' => array(
+				'title',
+				array(
+					'type',
+					4
+				)
+			),
+			'node_type' => array(
+				array(
+					'type',
+					4
+				)
+			),
+			'uid' => array('uid'),
+			'tnid' => array('tnid'),
+			'translate' => array('translate'),
+		),
+		'unique keys' => array(
+			'vid' => array('vid'),
+		),
+		// For documentation purposes only; foreign keys are not created in the
+		// database.
+		'foreign keys' => array(
+			'node_revision' => array(
+				'table' => 'node_revision',
+				'columns' => array('vid' => 'vid'),
+			),
+			'node_author' => array(
+				'table' => 'users',
+				'columns' => array('uid' => 'uid'),
+			),
+		),
+		'primary key' => array('nid'),
+	);
+}
+
+/**
+ * @throws Exception
+ * @throws FieldException
+ */
+function bf_dinner_update_7001() {
+
+	field_create_field(array(
+		'field_name' => 'dinner_dinner_load',
+		'type' => 'select',
+		'cardinality' => 1,
+		'settings' => array(
+			'allowed_values' => array(
+				/*
+				* The docs say that this is optional, but without it,
+				* the value is never saved to the datbase (tested with Drupal 7.28)
+				*/
+				0 => '',
+				1 => '',
+			),
+		),
+	));
+
+	field_create_instance(array(
+		'field_name' => 'dinner_dinner_load',
+		'entity_type' => 'node',
+		'bundle' => 'dinner',
+		'label' => t('dinner_dinner_load'),
+		'required' => FALSE,
+		// because not ticking a checkbox omits the value from $_POST
+		'display' => array(
+			'default' => array(
+				'type' => 'hidden',
+				// optional. I want to hide it
+			),
+		),
+		'widget' => array(
+			'type' => 'options_onoff',
+			// gives you a checkbox
+			'settings' => array(
+				'display_label' => 1,
+				// uses 'My boolean checkbox' as the label next to the actual checkbox
+			),
+		),
+	));
+
+}

@@ -1,0 +1,145 @@
+.stats-info {
+}
+
+.stats-info ul li {
+    list-style-type: none;
+}
+
+#bf-dinner-user-status-form .form-type-checkboxes,
+#bf-dinner-user-status-form .header-month,
+#bf-dinner-user-status-form .header-week {
+    clear: both;
+    border: solid 1px black;
+    border-bottom: 0;
+    margin: 0;
+    padding: 1em;
+}
+
+.header-month, .header-week {
+    background-color: #6c3;
+}
+
+#bf-dinner-user-status-form .form-type-checkboxes.last {
+    border-bottom: solid 1px black;
+}
+
+#bf-dinner-user-status-form .form-type-checkbox {
+    min-width: 5em;
+}
+
+.bf-dinner-pref-user {
+    clear: both;
+}
+.bf-dinner-pref-user .form-item {
+    float: left;
+}
+.bf-dinner-pref-user .form-item {
+    margin-right: 2em;
+}
+
+.form-type-checkboxes.weekend {
+    background-color: #ffe0e0;
+}
+.dinner-state-not-scheduled {
+    opacity: 0;
+}
+
+.header-month {
+    clear: both;
+}
+.header-week {
+    clear: both;
+}
+
+.dinner-header-name {
+    float: left;
+    min-width: 5em
+}
+
+.suggested-next-step {
+    border: solid 1px grey;
+}
+
+.assigned-table {
+    font-size: 7pt;
+    border: solid 1px grey;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.assigned-table td {
+    border: solid 1px grey;
+    min-width: 1em;
+    text-align: center;
+}
+
+.status {
+    color: black;
+    padding:0;
+}
+
+div.status {
+    background-image: none;
+}
+.status.status-unknown {
+    background: deepskyblue;
+}
+.status.status-not-possible {
+    background: lightcoral;
+}
+.status.status-possible {
+    background: limegreen;
+}
+.assigned-1 {
+
+}
+
+.assigned-table th,
+.assigned-table td {
+    border-color: #a0a0a0
+}
+
+th.user,
+th.date {
+    background: #c0c0c0;
+}
+
+th.user.user-ok,
+th.date.date-ok {
+    background: #e0e0e0;
+}
+
+.user-ok.date-ok.status-unknown {
+    background-color: lightblue;
+}
+
+.user-ok.date-ok.status-not-possible {
+    background-color: lightpink;
+}
+.user-ok.date-ok.status-possible {
+    background-color: lightgreen;
+}
+
+.user-pointstotal-double_ div {
+    background: repeating-linear-gradient(
+            -45deg,
+            transparent,
+            transparent 10px,
+            black 12px,
+            transparent 14px
+    );
+    min-height: 3em;
+}
+
+.legend {
+    float: left;
+    margin-right: 1em;
+}
+
+.legend .legend-bar {
+    float: left;
+    width: 2em;
+    border: solid 1px black;
+    margin-right: 0.2em;
+    text-align: center;
+}
